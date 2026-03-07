@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SYSTEM_ERROR_404</title>
+    <style>
+        body {
+            background-color: #0000aa; /* Azul clásico de BSOD */
+            color: #ffffff;
+            font-family: 'Lucida Console', Monaco, monospace;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+        .container { max-width: 800px; }
+        .error-title {
+            background-color: #aaaaaa;
+            color: #0000aa;
+            display: inline-block;
+            padding: 2px 10px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .code { margin: 20px 0; }
+        .blink { animation: blinker 1s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
+        a { color: #ffffff; text-decoration: none; border-bottom: 1px dashed #fff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="error-title">NEXUS_OS_FATAL_ERROR</div>
+        <p>Se ha encontrado un problema y Nexus OS se ha detenido para evitar daños a su cordura.</p>
+        
+        <p>PAGE_NOT_FOUND_404</p>
+
+        <p>Si esta es la primera vez que ve esta pantalla de error, reinicie su curiosidad. Si esta pantalla aparece de nuevo, siga estos pasos:</p>
+
+        <ul>
+            <li>Compruebe que la URL no tenga errores de sintaxis en el Kernel.</li>
+            <li>Si los problemas persisten, contacte con el administrador del sistema (Nyper).</li>
+            <li>Error de detención: <span class="code">0x00000404 (RESOURCE_NOT_FOUND)</span></li>
+        </ul>
+
+        <p class="code">*** NEXUS.SYS - Address 0x2026FF00 base at 0x20260000, DateStamp 65f1a2b3</p>
+
+        <p class="blink">Presione cualquier tecla para <a href="index.html">volver al inicio</a> _</p>
+    </div>
+
+    <script>
+        // Hacer que cualquier tecla te devuelva al index
+        document.addEventListener('keydown', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
