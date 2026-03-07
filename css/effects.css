@@ -1,6 +1,6 @@
 /* --- TEMA WINDOWS 2000 (Retro Tech) --- */
 body.theme-win2k {
-    --bg-main: #008080; /* El clásico verde azulado de Win9x/2k */
+    --bg-main: #008080 !important; /* El clásico verde azulado de Win9x/2k */
     --card-bg: #c0c0c0;
     --card-border: #ffffff;
     --text-main: #000000;
@@ -9,7 +9,13 @@ body.theme-win2k {
     font-family: 'Tahoma', 'Verdana', sans-serif !important;
 }
 
+body.theme-win2k .gradient-bg {
+    background: #008080 !important;
+    background-image: none !important;
+}
+
 body.theme-win2k .glass-card {
+    background: #c0c0c0 !important;
     backdrop-filter: none !important;
     border-top: 2px solid #ffffff !important;
     border-left: 2px solid #ffffff !important;
@@ -49,7 +55,7 @@ body.theme-matrix .glass-card {
 
 /* --- TEMA WINDOWS XP (Luna) --- */
 body.theme-winxp {
-    --bg-main: #245edb; /* Azul Luna */
+    --bg-main: #245edb !important; /* Azul Luna */
     --card-bg: #ece9d8; /* Color crema de las ventanas */
     --card-border: #003ac5;
     --text-main: #000000;
@@ -67,6 +73,7 @@ body.theme-winxp .glass-card {
     border-radius: 8px 8px 0 0 !important;
     box-shadow: 4px 4px 0 rgba(0,0,0,0.2) !important;
     backdrop-filter: none !important;
+    color: #000 !important;
 }
 
 /* El botón azul de la nav bar de XP */

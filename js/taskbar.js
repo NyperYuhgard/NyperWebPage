@@ -49,6 +49,19 @@ const taskbarStyles = `
         cursor: pointer;
     }
 
+    /* Estilos del Reloj */
+    #nexus-clock-tray {
+        margin-left: auto;
+        padding: 2px 8px;
+        border: 2px solid;
+        border-color: var(--tb-border-dark) var(--tb-border-light) var(--tb-border-light) var(--tb-border-dark);
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 12px;
+        color: var(--tb-text);
+        min-width: 60px;
+        text-align: center;
+    }
+
     #start-menu {
         position: fixed;
         bottom: 40px; left: 0;
@@ -110,6 +123,10 @@ function initTaskbar() {
             <i class="fas fa-music"></i> NexusPlayer
         </div>
         
+        <div id="nexus-clock-tray">
+            <span id="nexus-clock">00:00</span>
+        </div>
+        
         <div id="start-menu">
             <div class="flex">
                 <div class="start-sidebar">NEXUS OS</div>
@@ -155,6 +172,18 @@ function initTaskbar() {
     document.onclick = (e) => {
         if (!menu.contains(e.target)) menu.style.display = 'none';
     };
+
+    // Inicializar actualización del reloj
+    const updateClock = () => {
+        const now = new Date();
+        const clock = document.getElementById('nexus-clock');
+        if (clock) {
+            clock.innerText = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0');
+        }
+    };
+    updateClock();
+    setInterval(updateClock, 1000);
 }
 
 window.toggleThemeSubmenu = function() {

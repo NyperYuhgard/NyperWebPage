@@ -11,13 +11,13 @@
 
 /* --- ESTILOS BASE --- */
 body {
-    background: var(--bg-main) !important;
+    background: var(--bg-main);
     color: var(--text-main);
     transition: background 0.3s ease, color 0.3s ease;
 }
 
 .gradient-bg { 
-    background: var(--bg-main); 
+    background: var(--bg-main) !important; 
 }
 
 /* --- COMPONENTES --- */
