@@ -1,0 +1,277 @@
+/* NEXUS_EXECUTABLE | ID: nexus_rhythm_v15 | Title: Nexus Rhythm: Precision Drain | Width: 460px | Height: 620px */
+
+(function(api) {
+    const ctx = api.getContainer();
+    let audioCtx, analyser, source, animationId;
+    let score = 0, combo = 0, isLinked = false;
+    let difficulty = "NORMAL";
+    let activeKeys = {}; 
+    let laneBudgets = [0, 0, 0, 0];
+
+    const diffSettings = {
+        "EASY": { threshold: 225, cooldown: 350, speed: 5 },
+        "NORMAL": { threshold: 215, cooldown: 240, speed: 7 },
+        "HARD": { threshold: 205, cooldown: 160, speed: 10 }
+    };
+    
+    const arrowChars = ['←', '↓', '↑', '→'];
+    const controlKeys = {'a':0, 'ArrowLeft':0, 's':1, 'ArrowDown':1, 'w':2, 'ArrowUp':2, 'd':3, 'ArrowRight':3};
+
+    ctx.innerHTML = `
+        <style>
+            .lane-receptor { font-size:40px; color:#222; font-weight:bold; border:2px solid #222; border-radius:8px; width:50px; height:50px; display:flex; align-items:center; justify-content:center; transition: 0.05s; background: rgba(0,0,0,0.5); position:relative; }
+            .note-arrow { position:absolute; width:50px; text-align:center; font-size:40px; font-weight:bold; color:#0f0; text-shadow: 0 0 10px #0f0; z-index:15; pointer-events:none; }
+            .note-body { position:absolute; width:26px; left:12px; background: linear-gradient(to bottom, #0f0, #040); opacity: 0.4; z-index: 5; border-radius: 4px; border: 1px solid #0f0; transition: opacity 0.1s; }
+            .diff-btn { flex:1; padding:5px; background:#111; color:#555; border:1px solid #333; cursor:pointer; font-size:10px; font-family:monospace; }
+            .diff-btn.active { background:#0f0; color:#000; border-color:#0f0; font-weight:bold; }
+            #judgement-viewer { position:absolute; top:40%; left:50%; transform:translate(-50%, -50%); font-size:24px; font-weight:bold; pointer-events:none; opacity:0; transition: 0.1s; z-index:25; }
+        </style>
+        <div style="height:100%; background:#000; color:#0f0; font-family:monospace; display:flex; flex-direction:column; overflow:hidden; border:3px solid #333;">
+            <div style="padding:8px; background:#111; display:flex; justify-content:space-between; border-bottom:1px solid #0f0; font-size:11px;">
+                <span>SCORE: <span id="score-val">000000</span></span>
+                <span>COMBO: <span id="combo-val">0</span></span>
+            </div>
+
+            <div id="diff-selector" style="display:flex; background:#000;">
+                <button class="diff-btn" onclick="setDiff('EASY', this)">EASY</button>
+                <button class="diff-btn active" onclick="setDiff('NORMAL', this)">NORMAL</button>
+                <button class="diff-btn" onclick="setDiff('HARD', this)">HARD</button>
+            </div>
+            
+            <div id="game-stage" style="flex-grow:1; position:relative; background:#050505; display:flex; justify-content:center;">
+                <div id="judgement-viewer">PERFECT</div>
+                <div id="center-playfield" style="width:240px; height:100%; display:flex; border-left:1px solid #1a1a1a; border-right:1px solid #1a1a1a; position:relative; background: rgba(10,10,10,0.8);">
+                    <div id="notes-layer" style="position:absolute; inset:0; pointer-events:none;"></div>
+                    ${arrowChars.map((arrow, i) => `
+                        <div id="lane-${i}" style="flex:1; border-right:1px solid #111; position:relative; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; padding-bottom:75px; z-index:20;">
+                            <div id="target-${i}" class="lane-receptor">${arrow}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div style="display:flex;">
+                <button id="btn-sync" style="flex:2; height:45px; background:#0f0; color:#000; font-weight:bold; cursor:pointer; border:none; border-right:1px solid #000;">SYNC & DRAIN</button>
+                <button id="btn-detach" style="flex:1; height:45px; background:#400; color:#f00; font-weight:bold; cursor:pointer; border:none; display:none;">DETACH</button>
+            </div>
+        </div>
+    `;
+
+    window.setDiff = (lvl, btn) => {
+        difficulty = lvl;
+        ctx.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+    };
+
+    const playfield = ctx.querySelector('#center-playfield');
+    const notesLayer = ctx.querySelector('#notes-layer');
+    const scoreVal = ctx.querySelector('#score-val');
+    const comboVal = ctx.querySelector('#combo-val');
+    const syncBtn = ctx.querySelector('#btn-sync');
+    const detachBtn = ctx.querySelector('#btn-detach');
+    const judgeViewer = ctx.querySelector('#judgement-viewer');
+
+    function initGame() {
+        const audio = window.nexusMainAudio;
+        if (!audio) return;
+        audio.pause(); audio.currentTime = 0;
+        if (!window.nexusAudioCtx) window.nexusAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        audioCtx = window.nexusAudioCtx;
+        if (!window.nexusSourceNode) window.nexusSourceNode = audioCtx.createMediaElementSource(audio);
+        source = window.nexusSourceNode;
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 64; analyser.smoothingTimeConstant = 0.05;
+        source.disconnect(); source.connect(analyser); analyser.connect(audioCtx.destination);
+
+        syncBtn.style.display = "none";
+        detachBtn.style.display = "block";
+        isLinked = true;
+        score = 0; combo = 0; scoreVal.innerText = "000000"; comboVal.innerText = "0";
+        laneBudgets = [0, 0, 0, 0];
+        audio.play().catch(e => console.log("Play blocked"));
+
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+        let lastBeat = 0;
+
+        function loop() {
+            if (!isLinked) return;
+            animationId = requestAnimationFrame(loop);
+            analyser.getByteFrequencyData(dataArray);
+            const settings = diffSettings[difficulty];
+            const bass = (dataArray[0] + dataArray[1]) / 2;
+
+            if (bass > settings.threshold && Date.now() - lastBeat > settings.cooldown) {
+                const lIdx = Math.floor(Math.random() * 4);
+                if (Date.now() > laneBudgets[lIdx]) {
+                    const isSlide = Math.random() > 0.8;
+                    spawnNote(lIdx, settings.speed, isSlide);
+                    lastBeat = Date.now();
+                }
+            }
+            checkSlideHolding();
+        }
+        loop();
+    }
+
+    function spawnNote(laneIdx, speed, isSlide) {
+        const container = document.createElement('div');
+        container.style.cssText = `position:absolute; top:0; left:${laneIdx * 60}px; width:60px; height: 50px;`;
+        
+        const arrow = document.createElement('div');
+        arrow.className = 'note-arrow';
+        arrow.innerText = arrowChars[laneIdx];
+        container.appendChild(arrow);
+
+        let slideLength = isSlide ? 220 : 0; 
+        if (isSlide) {
+            const slideBody = document.createElement('div');
+            slideBody.className = 'note-body';
+            slideBody.style.height = slideLength + 'px';
+            slideBody.style.bottom = '25px'; // Posicionado arriba de la flecha
+            container.appendChild(slideBody);
+            laneBudgets[laneIdx] = Date.now() + (slideLength * 15);
+            container.dataset.bodyId = "body-" + Date.now();
+            slideBody.id = container.dataset.bodyId;
+        }
+
+        notesLayer.appendChild(container);
+
+        let y = 0;
+        const fall = setInterval(() => {
+            if (!isLinked) { clearInterval(fall); container.remove(); return; }
+            y += speed;
+            container.style.top = y + 'px';
+
+            if (y - slideLength > playfield.clientHeight) {
+                clearInterval(fall);
+                if (container.parentElement) {
+                    if (!container.dataset.hit) {
+                        showJudgement("MISS", "#f00");
+                        combo = 0; comboVal.innerText = combo;
+                    }
+                    container.remove();
+                }
+            }
+        }, 16);
+
+        container.dataset.lane = laneIdx;
+        container.dataset.fallId = fall;
+        container.dataset.isSlide = isSlide;
+        container.dataset.initialLength = slideLength;
+        container.dataset.currentLength = slideLength;
+    }
+
+    function checkSlideHolding() {
+        const targetY = playfield.clientHeight - 100;
+        notesLayer.querySelectorAll('[data-is-slide="true"]').forEach(slide => {
+            const laneIdx = parseInt(slide.dataset.lane);
+            const body = document.getElementById(slide.dataset.bodyId);
+            
+            if (activeKeys[laneIdx]) {
+                const noteY = slide.offsetTop;
+                
+                // Si la flecha ya llegó o pasó el receptor
+                if (noteY > targetY - 45) {
+                    let currentL = parseFloat(slide.dataset.currentLength);
+                    
+                    if (currentL > 0) {
+                        // FIX DE RECORTE: Calculamos cuánto de la nota debe "desaparecer"
+                        // El cuerpo se acorta proporcionalmente a la posición de la flecha
+                        let drainRate = 5; 
+                        currentL -= drainRate;
+                        slide.dataset.currentLength = currentL;
+                        
+                        if (body) {
+                            // Mantenemos el cuerpo pegado al receptor
+                            body.style.height = Math.max(0, currentL) + 'px';
+                            // El 'bottom' se ajusta para que el cuerpo se consuma hacia arriba
+                            body.style.bottom = (25 + (parseFloat(slide.dataset.initialLength) - currentL)) + 'px';
+                            body.style.opacity = "0.9";
+                            body.style.boxShadow = "0 0 15px #0f0";
+                        }
+                        
+                        score += 3;
+                        scoreVal.innerText = score.toString().padStart(6, '0');
+                        slide.dataset.hit = "true";
+                    } else if (body) {
+                        body.remove();
+                    }
+                }
+            } else if (body) {
+                body.style.opacity = "0.4";
+                body.style.boxShadow = "none";
+            }
+        });
+    }
+
+    function showJudgement(txt, color) {
+        judgeViewer.innerText = txt; judgeViewer.style.color = color;
+        judgeViewer.style.opacity = "1";
+        setTimeout(() => judgeViewer.style.opacity = "0", 250);
+    }
+
+    function handleInput(laneIdx, isDown) {
+        if (!isLinked) return;
+        activeKeys[laneIdx] = isDown;
+        const target = ctx.querySelector(`#target-${laneIdx}`);
+        
+        if (isDown) {
+            target.style.background = "rgba(0,255,0,0.6)";
+            target.style.borderColor = "#0f0";
+            
+            const notes = notesLayer.querySelectorAll('[data-lane]');
+            const targetY = playfield.clientHeight - 100;
+
+            notes.forEach(note => {
+                if (parseInt(note.dataset.lane) === laneIdx && !note.dataset.hit) {
+                    const diff = Math.abs(note.offsetTop - targetY);
+                    if (diff < 55) {
+                        const label = diff < 15 ? "PERFECT" : (diff < 35 ? "GOOD" : "ALMOST");
+                        showJudgement(label, diff < 15 ? "#0ff" : (diff < 35 ? "#0f0" : "#ff0"));
+                        note.dataset.hit = "true";
+                        
+                        if (note.dataset.isSlide === "false") {
+                            clearInterval(parseInt(note.dataset.fallId));
+                            note.remove();
+                        } else {
+                            note.querySelector('.note-arrow').style.color = "#fff";
+                            note.querySelector('.note-arrow').style.textShadow = "0 0 20px #fff";
+                        }
+                        score += 100; combo++;
+                        scoreVal.innerText = score.toString().padStart(6, '0');
+                        comboVal.innerText = combo;
+                    }
+                }
+            });
+        } else {
+            target.style.background = "rgba(0,0,0,0.5)";
+            target.style.borderColor = "#222";
+        }
+    }
+
+    window.addEventListener('keydown', (e) => {
+        const idx = controlKeys[e.key];
+        if (idx !== undefined && !activeKeys[idx]) handleInput(idx, true);
+    });
+
+    window.addEventListener('keyup', (e) => {
+        const idx = controlKeys[e.key];
+        if (idx !== undefined) handleInput(idx, false);
+    });
+
+    syncBtn.onclick = () => {
+        if (window.nexusAudioCtx && window.nexusAudioCtx.state === 'suspended') window.nexusAudioCtx.resume();
+        initGame();
+    };
+
+    detachBtn.onclick = () => {
+        isLinked = false; cancelAnimationFrame(animationId);
+        if (source) { source.disconnect(); source.connect(audioCtx.destination); }
+        notesLayer.innerHTML = "";
+        syncBtn.style.display = "block"; detachBtn.style.display = "none";
+        ctx.querySelector('#diff-selector').style.pointerEvents = "auto";
+    };
+
+    api.onExit(() => { isLinked = false; cancelAnimationFrame(animationId); });
+
+})(NexusAPI);
