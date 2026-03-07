@@ -1,220 +1,129 @@
-<!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nyper Yuhgard | Portafolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .gradient-bg { background: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%); }
-        .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .modal { transition: opacity 0.3s ease, visibility 0.3s ease; }
-        .modal.hidden { opacity: 0; visibility: hidden; display: none; }
-        
-        
-        .bg-grid {
-            background-image: radial-gradient(rgba(59, 130, 246, 0.2) 1px, transparent 0);
-            background-size: 24px 24px;
-        }
-        .paypal-glow {
-            box-shadow: 0 0 20px rgba(0, 112, 186, 0.4);
-        }
-        .paypal-glow:hover {
-            box-shadow: 0 0 35px rgba(0, 112, 186, 0.6);
-        }
-    </style>
-</head>
-<body class="gradient-bg text-white min-h-screen font-sans">
-
-    <nav class="fixed top-0 w-full z-40 glass-card py-4">
-        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">
-            <span class="font-bold text-xl tracking-tighter italic text-blue-400">NYPER YUHGARD</span>
-            <div class="space-x-8 text-sm font-medium uppercase tracking-widest">
-                <a href="#inicio" class="hover:text-blue-400 transition">Inicio</a>
-                <a href="#proyectos" class="hover:text-blue-400 transition">Proyectos</a>
-                <a href="#sobre-mi" class="hover:text-blue-400 transition">Sobre mí</a>
-                <a href="#donar" class="hover:text-blue-400 transition">Donar</a>
-            </div>
-        </div>
-    </nav>
-
-    <header id="inicio" class="pt-32 pb-20 px-6">
-        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            <img src="images/NYPF.jpg" alt="Foto Perfil" class="w-48 h-48 rounded-2xl shadow-2xl border-2 border-blue-500/50 object-cover rotate-3 hover:rotate-0 transition duration-500">
-            <div>
-                <h1 class="text-5xl font-extrabold mb-2 text-white text-center md:text-left">Nyper Yuhgard</h1>
-                <p class="text-blue-400 text-xl font-mono mb-6 text-center md:text-left">> Software & Music Creator</p>
-                <div class="flex flex-col md:flex-row items-center gap-4">
-                    <a href="https://t.me/NY_Links" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/40 text-center w-full md:w-auto">Contactar</a>
-                    <div class="flex gap-6 text-2xl text-gray-400">
-                        <a href="https://github.com/NyperYuhgard" target="_blank" class="hover:text-white transition"><i class="fab fa-github"></i></a>
-                        <a href="https://paypal.me/NyperYuhgard" target="_blank" class="hover:text-[#0070ba] transition"><i class="fab fa-paypal"></i></a>
-                    </div>
+<!DOCTYPE html>  
+<html lang="es" class="scroll-smooth">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Nyper Yuhgard | Portafolio</title>  
+    <script src="https://cdn.tailwindcss.com"></script>  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">  
+    <link rel="stylesheet" href="css/main.css">  
+    <link rel="stylesheet" href="css/effects.css">  
+</head>  
+<body class="gradient-bg text-white min-h-screen font-sans">  
+     
+    <canvas id="matrixCanvas" class="fixed top-0 left-0 w-full h-full -z-10 hidden"></canvas>  
+ 
+ 
+  
+    <nav class="fixed top-0 w-full z-40 glass-card py-4">  
+        <div class="max-w-6xl mx-auto px-6 flex justify-between items-center">  
+            <span class="font-bold text-xl tracking-tighter italic text-blue-400">NYPER YUHGARD</span>  
+            <div class="space-x-8 text-sm font-medium uppercase tracking-widest">  
+                <a href="#inicio" class="hover:text-blue-400 transition">Inicio</a>  
+                <a href="#proyectos" class="hover:text-blue-400 transition">Proyectos</a>  
+                <a href="#sobre-mi" class="hover:text-blue-400 transition">Sobre mí</a>  
+                <a href="#donar" class="hover:text-blue-400 transition">Donar</a>  
+            </div>  
+        </div>  
+    </nav>  
+  
+    <header id="inicio" class="pt-32 pb-20 px-6">  
+        <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-10">  
+            <img src="images/NYPF.jpg" alt="Foto Perfil" class="w-48 h-48 rounded-2xl shadow-2xl border-2 border-blue-500/50 object-cover rotate-3 hover:rotate-0 transition duration-500">  
+            <div>  
+                <h1 class="text-5xl font-extrabold mb-2 text-white text-center md:text-left">Nyper Yuhgard</h1>  
+                <p class="text-blue-400 text-xl font-mono mb-6 text-center md:text-left">> Software & Music Creator</p>  
+                <div class="flex flex-col md:flex-row items-center gap-4">  
+                    <a href="https://t.me/NY_Links" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-8 py-3 rounded-xl font-bold transition shadow-lg shadow-blue-900/40 text-center w-full md:w-auto">Contactar</a>  
+                    <div class="flex gap-6 text-2xl text-gray-400">  
+                        <a href="https://github.com/NyperYuhgard" target="_blank" class="hover:text-white transition"><i class="fab fa-github"></i></a>  
+                        <a href="https://paypal.me/NyperYuhgard" target="_blank" class="hover:text-[#0070ba] transition"><i class="fab fa-paypal"></i></a>  
+                    </div>  
+                </div>  
+            </div>  
+        </div>  
+    </header>  
+  
+    <section id="proyectos" class="py-20 px-6 bg-black/20">  
+        <div class="max-w-6xl mx-auto">  
+            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">  
+                <span class="h-1 w-12 bg-blue-500"></span> Proyectos & Software  
+            </h2>  
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">  
+                <div onclick="openModal('decomps')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-yellow-500/30">  
+                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-gamepad text-4xl text-yellow-500/20 group-hover:scale-110 transition duration-500"></i></div>  
+                    <div class="p-4 text-center"><h3 class="font-bold">Decompilaciones</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Decompilaciones</p></div>  
+                </div>  
+                <div onclick="openModal('musica_cat')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-pink-500/30">  
+                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-music text-4xl text-pink-500/20 group-hover:scale-110 transition duration-500"></i></div>  
+                    <div class="p-4 text-center"><h3 class="font-bold">Música & FLP</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Artista & FNF</p></div>  
+                </div>  
+                <div onclick="openModal('visuales')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-blue-500/30">  
+                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-wave-square text-4xl text-blue-500/20 group-hover:scale-110 transition duration-500"></i></div>  
+                    <div class="p-4 text-center"><h3 class="font-bold">Visualización</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Music Visuals</p></div>  
+                </div>  
+                <div onclick="openModal('tools')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-purple-500/30">  
+                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-rocket text-4xl text-purple-500/20 group-hover:scale-110 transition duration-500"></i></div>  
+                    <div class="p-4 text-center"><h3 class="font-bold">Herramientas</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Launcher & System</p></div>  
+                </div>  
+            </div>  
+        </div>  
+    </section>  
+  
+    <div id="projectModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">  
+        <div class="glass-card max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-3xl relative flex flex-col">  
+            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-red-600 transition">×</button>  
+            <div id="modalContent" class="overflow-y-auto p-8"></div>  
+        </div>  
+    </div>  
+  
+    <section id="sobre-mi" class="py-24 px-6">  
+        <div class="max-w-3xl mx-auto text-center">  
+            <h2 class="text-3xl font-bold mb-8 italic">Acerca de mí</h2>  
+            <p class="text-gray-400 text-lg leading-relaxed mb-12">Exploro la intersección entre el código y el arte. Especializada en ingeniería inversa de juegos clásicos y creación multimedia.</p>  
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">  
+                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">Reverse Eng</div>  
+                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">C++ / C#</div>  
+                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">FL Studio</div>  
+                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">Wine/Linux</div>  
+            </div>  
+        </div>  
+    </section>  
+  
+    <section id="donar" class="py-24 px-6 relative overflow-hidden">  
+        <div class="absolute inset-0 bg-grid opacity-20"></div>  
+        <div class="max-w-3xl mx-auto relative z-10">  
+            <div class="glass-card p-12 rounded-[3rem] text-center border-t border-white/20 shadow-2xl overflow-hidden relative">  
+                <div class="mb-6 inline-block p-4 bg-blue-500/10 rounded-full">  
+                    <i class="fas fa-heart text-4xl text-blue-400 animate-pulse"></i>  
+                </div>  
+                <h2 class="text-4xl font-extrabold mb-4 text-white italic">¿Te gusta mi trabajo?</h2>  
+                <p class="text-gray-400 text-lg mb-10 max-w-lg mx-auto leading-relaxed">  
+                    Si mis herramientas te han ahorrado tiempo o mi música te ha acompañado, considera apoyarme. Tu ayuda mantiene vivos estos proyectos gratuitos.  
+                </p>  
+                <div class="flex flex-col items-center gap-6">  
+                    <a href="https://paypal.me/NyperYuhgard" target="_blank"   
+                       class="paypal-glow flex items-center gap-4 bg-[#0070ba] hover:bg-[#005ea6] text-white px-12 py-5 rounded-2xl font-black text-xl transition-all transform hover:scale-105 active:scale-95">  
+                       <i class="fab fa-paypal text-2xl"></i> Donar con PayPal  
+                    </a>  
+                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] mt-4">  
+                        Gracias por ser parte del viaje  
+                    </p>  
+                </div>  
+                <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">  
+                    <i class="fas fa-mug-hot text-7xl -rotate-12"></i>  
                 </div>
-            </div>
-        </div>
-    </header>
-
-    <section id="proyectos" class="py-20 px-6 bg-black/20">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold mb-12 flex items-center gap-4">
-                <span class="h-1 w-12 bg-blue-500"></span> Proyectos & Software
-            </h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div onclick="openModal('decomps')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-yellow-500/30">
-                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-gamepad text-4xl text-yellow-500/20 group-hover:scale-110 transition duration-500"></i></div>
-                    <div class="p-4 text-center"><h3 class="font-bold">Decompilaciones</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Decompilaciones</p></div>
-                </div>
-                <div onclick="openModal('musica_cat')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-pink-500/30">
-                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-music text-4xl text-pink-500/20 group-hover:scale-110 transition duration-500"></i></div>
-                    <div class="p-4 text-center"><h3 class="font-bold">Música & FLP</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Artista & FNF</p></div>
-                </div>
-                <div onclick="openModal('visuales')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-blue-500/30">
-                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-wave-square text-4xl text-blue-500/20 group-hover:scale-110 transition duration-500"></i></div>
-                    <div class="p-4 text-center"><h3 class="font-bold">Visualización</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Music Visuals</p></div>
-                </div>
-                <div onclick="openModal('tools')" class="glass-card rounded-2xl overflow-hidden hover:transform hover:-translate-y-2 transition duration-300 cursor-pointer group border-b-4 border-purple-500/30">
-                    <div class="h-32 bg-gray-800 flex items-center justify-center"><i class="fas fa-rocket text-4xl text-purple-500/20 group-hover:scale-110 transition duration-500"></i></div>
-                    <div class="p-4 text-center"><h3 class="font-bold">Herramientas</h3><p class="text-[10px] uppercase text-gray-500 mt-1">Launcher & System</p></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <div id="projectModal" class="modal hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90">
-        <div class="glass-card max-w-2xl w-full max-h-[90vh] overflow-hidden rounded-3xl relative flex flex-col">
-            <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-black/50 text-white w-10 h-10 rounded-full hover:bg-red-600 transition">×</button>
-            <div id="modalContent" class="overflow-y-auto p-8"></div>
-        </div>
-    </div>
-
-    <section id="sobre-mi" class="py-24 px-6">
-        <div class="max-w-3xl mx-auto text-center">
-            <h2 class="text-3xl font-bold mb-8 italic">Acerca de mí</h2>
-            <p class="text-gray-400 text-lg leading-relaxed mb-12">Exploro la intersección entre el código y el arte. Especializada en ingeniería inversa de juegos clásicos y creación multimedia.</p>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">Reverse Eng</div>
-                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">C++ / C#</div>
-                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">FL Studio</div>
-                <div class="glass-card p-4 rounded-xl text-xs font-mono tracking-widest uppercase">Wine/Linux</div>
-            </div>
-        </div>
-    </section>
-
-    <section id="donar" class="py-24 px-6 relative overflow-hidden">
-        <div class="absolute inset-0 bg-grid opacity-20"></div>
-        <div class="absolute -top-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-
-        <div class="max-w-3xl mx-auto relative z-10">
-            <div class="glass-card p-12 rounded-[3rem] text-center border-t border-white/20 shadow-2xl overflow-hidden relative">
-                <div class="mb-6 inline-block p-4 bg-blue-500/10 rounded-full">
-                    <i class="fas fa-heart text-4xl text-blue-400 animate-pulse"></i>
-                </div>
-                
-                <h2 class="text-4xl font-extrabold mb-4 text-white italic">¿Te gusta mi trabajo?</h2>
-                <p class="text-gray-400 text-lg mb-10 max-w-lg mx-auto leading-relaxed">
-                    Si mis herramientas te han ahorrado tiempo o mi música te ha acompañado, considera apoyarme. Tu ayuda mantiene vivos estos proyectos gratuitos.
-                </p>
-
-                <div class="flex flex-col items-center gap-6">
-                    <a href="https://paypal.me/NyperYuhgard" target="_blank" 
-                       class="paypal-glow flex items-center gap-4 bg-[#0070ba] hover:bg-[#005ea6] text-white px-12 py-5 rounded-2xl font-black text-xl transition-all transform hover:scale-105 active:scale-95">
-                       <i class="fab fa-paypal text-2xl"></i> Donar con PayPal
-                    </a>
-                    
-                    <p class="text-[10px] text-gray-500 uppercase tracking-[0.3em] mt-4">
-                        Gracias por ser parte del viaje
-                    </p>
-                </div>
-
-                <div class="absolute top-0 right-0 p-4 opacity-20">
-                    <i class="fas fa-mug-hot text-6xl -rotate-12"></i>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-12 text-center text-gray-500 border-t border-white/5">
-        <p class="text-sm">© 2026 Nyper Yuhgard | Hecho con pasión.</p>
+            </div>  
+        </div>  
+    </section>  
+  
+    <footer class="py-12 text-center text-gray-500 border-t border-white/5">  
+        <p class="text-sm">© 2026 Nyper Yuhgard | Hecho con pasión.</p>  
     </footer>
 
-    <script>
-        const categories = {
-            decomps: {
-                title: "Decompilaciones",
-                mainImg: "images/Rev.png",
-                desc: "Proyectos de ingeniería inversa enfocados en la preservación y mejora de motores de juegos clásicos.",
-                items: [
-                    { name: "Crash Bandicoot 3 Warped", link: "https://github.com/NyperYuhgard/Crash-Bandicoot-Warped", tag: "MIPS / PS1" },
-                    { name: "Sonic Classics", link: "https://github.com/NyperYuhgard/Sonic-Classics", tag: "Sega Genesis" },
-                    { name: "Sonic 2 (Sep 14 Build)", link: "https://github.com/NyperYuhgard/Sonic-2-September-14-1992-Pre-Beta-prototype", tag: "Historical Build" },
-                    { name: "Sonic 2 (Aug 21 Build)", link: "https://github.com/NyperYuhgard/Sonic-2-August-21-1992-Alpha-prototype", tag: "Historical Build" },
-                    { name: "Sonic 3 (Nov 03)", link: "https://github.com/NyperYuhgard/Sonic-3-Beta-Dissembly", tag: "Prototype" },
-                    { name: "Sonic 3 Alone With Flamedriver", link: "https://github.com/NyperYuhgard/Sonic-3-Alone-With-FlameDriver", tag: "Custom Engine" },
-                    { name: "Sega Genesis TMSS Bios", link: "https://github.com/NyperYuhgard/Sega-Genesis", tag: "Bios" },
-                    { name: "Sonic 2 Dash N95", link: "https://github.com/NyperYuhgard/Sonic-2-N95-Decomp", tag: "J2ME" },
-                    { name: "Sonic 2 Dash 320x240", link: "https://github.com/NyperYuhgard/Sonic-2-Dash-320x240-Decomp", tag: "J2ME" },
-                    { name: "Sonic 2 HD v2.0", link: "https://github.com/NyperYuhgard/S2HD", tag: "C#" }
-                ]
-            },
-            musica_cat: {
-                title: "Música & Recreaciones",
-                mainImg: "images/Spott.png", 
-                desc: "Mi catálogo de música original y recreaciones precisas de temas de FNF.",
-                items: [
-                    { name: "Artista Musical (Spotify/Web)", link: "https://open.spotify.com/intl-es/artist/4Tj6ggRrLzbWLg12UUBS0R", tag: "Original Music" },
-                    { name: "FNF FLP Recreations", link: "https://github.com/NyperYuhgard/Nyper-FLP-Recreations", tag: "FL Studio / MIDI" }
-                ]
-            },
-            visuales: {
-                title: "Visualización de Música",
-                mainImg: "images/MVP.png",
-                desc: "Herramientas diseñadas para renderizado de audio en tiempo real con alto rendimiento.",
-                items: [
-                    { name: "Vizualizador de Musica Ligero", link: "https://github.com/NyperYuhgard/Music-Vizualiser", tag: ".Net / Visual Studio" }
-                ]
-            },
-            tools: {
-                title: "Herramientas de Sistema",
-                mainImg: "images/Proton.png",
-                desc: "Software para usar Proton sin depender de Steam.",
-                items: [
-                    { name: "Proton Launcher", link: "https://github.com/NyperYuhgard/proton-launcher", tag: "Optimization" }
-                ]
-            }
-        };
-
-        function openModal(key) {
-            const cat = categories[key];
-            const content = document.getElementById('modalContent');
-            let listHTML = `
-                <div class="rounded-xl overflow-hidden mb-6 border border-white/10 shadow-2xl"><img src="${cat.mainImg}" class="w-full h-48 object-cover"></div>
-                <h2 class="text-3xl font-bold text-blue-400 mb-2">${cat.title}</h2>
-                <p class="text-gray-400 text-sm mb-8">${cat.desc}</p>
-                <div class="space-y-3">
-            `;
-            cat.items.forEach(item => {
-                listHTML += `
-                    <a href="${item.link}" target="_blank" class="flex justify-between items-center p-4 bg-white/5 rounded-xl hover:bg-blue-500/20 border border-white/5 transition group">
-                        <div class="flex flex-col"><span class="font-bold text-gray-200 group-hover:text-blue-400">${item.name}</span><span class="text-[9px] uppercase tracking-tighter text-gray-500 font-mono italic">${item.tag}</span></div>
-                        <i class="fas fa-arrow-right text-xs text-gray-700 group-hover:translate-x-1 transition group-hover:text-blue-400"></i>
-                    </a>
-                `;
-            });
-            listHTML += `</div>`;
-            content.innerHTML = listHTML;
-            document.getElementById('projectModal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('projectModal').classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        window.onclick = (e) => { if (e.target.id === 'projectModal') closeModal(); }
-    </script>
-</body>
+    <script src="js/projects.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/taskbar.js"></script>
+    <script src="js/winamp.js"></script>
+</body>  
 </html>

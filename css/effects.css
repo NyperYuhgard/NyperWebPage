@@ -1,0 +1,84 @@
+/* --- TEMA WINDOWS 2000 (Retro Tech) --- */
+body.theme-win2k {
+    --bg-main: #008080; /* El clásico verde azulado de Win9x/2k */
+    --card-bg: #c0c0c0;
+    --card-border: #ffffff;
+    --text-main: #000000;
+    --text-muted: #424242;
+    --accent: #000080;
+    font-family: 'Tahoma', 'Verdana', sans-serif !important;
+}
+
+body.theme-win2k .glass-card {
+    backdrop-filter: none !important;
+    border-top: 2px solid #ffffff !important;
+    border-left: 2px solid #ffffff !important;
+    border-right: 2px solid #808080 !important;
+    border-bottom: 2px solid #808080 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+body.theme-win2k nav {
+    background: #c0c0c0 !important;
+    border-bottom: 2px solid #808080 !important;
+}
+
+body.theme-win2k .text-blue-400 { color: #000080 !important; }
+
+/* --- TEMA MATRIX (Hacker Mode) --- */
+/* effects.css */
+
+body.theme-matrix {
+    background-color: black !important;
+}
+
+/* Hacemos que el fondo de las secciones sea un poco más transparente 
+   para que la lluvia se vea pasando por detrás */
+body.theme-matrix .gradient-bg, 
+body.theme-matrix section {
+    background-color: rgba(0, 0, 0, 0.6) !important;
+    background-image: none !important;
+}
+
+body.theme-matrix .glass-card {
+    background: rgba(0, 20, 0, 0.8) !important;
+    border: 1px solid #00ff41 !important;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3) !important;
+}
+
+/* --- TEMA WINDOWS XP (Luna) --- */
+body.theme-winxp {
+    --bg-main: #245edb; /* Azul Luna */
+    --card-bg: #ece9d8; /* Color crema de las ventanas */
+    --card-border: #003ac5;
+    --text-main: #000000;
+    --accent: #3c811f; /* Verde del botón Start */
+}
+
+body.theme-winxp .gradient-bg {
+    /* El famoso fondo de la colina (Bliss) simplificado en degradado */
+    background: linear-gradient(to bottom, #74b3e8 0%, #4a91d1 50%, #63a62f 51%, #88c440 100%) !important;
+}
+
+body.theme-winxp .glass-card {
+    background: #ece9d8 !important;
+    border: 2px solid #003ac5 !important;
+    border-radius: 8px 8px 0 0 !important;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.2) !important;
+    backdrop-filter: none !important;
+}
+
+/* El botón azul de la nav bar de XP */
+body.theme-winxp nav {
+    background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #1941a5 100%) !important;
+    border-bottom: 2px solid #1941a5 !important;
+}
+
+/* Transformar botones en el estilo redondeado de XP */
+body.theme-winxp .bg-blue-600 {
+    background: linear-gradient(to bottom, #ffaa44 0%, #ff8800 100%) !important; /* Estilo botón Cerrar/Naranja */
+    border: 1px solid #cc6600 !important;
+    border-radius: 6px !important;
+    color: white !important;
+}

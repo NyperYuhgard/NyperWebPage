@@ -1,0 +1,65 @@
+/* --- VARIABLES DE TEMA (Valores por defecto) --- */
+:root {
+    --bg-main: linear-gradient(135deg, #1e1e2f 0%, #2d2d44 100%);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-main: #ffffff;
+    --text-muted: #9ca3af; /* gray-400 */
+    --accent: #3b82f6;     /* blue-500 */
+    --nav-bg: rgba(255, 255, 255, 0.05);
+}
+
+/* --- ESTILOS BASE --- */
+body {
+    background: var(--bg-main) !important;
+    color: var(--text-main);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.gradient-bg { 
+    background: var(--bg-main); 
+}
+
+/* --- COMPONENTES --- */
+.glass-card { 
+    background: var(--card-bg) !important; 
+    backdrop-filter: blur(10px); 
+    border: 1px solid var(--card-border); 
+}
+
+/* Navegación */
+nav.glass-card {
+    background: var(--nav-bg) !important;
+}
+
+/* Modales */
+.modal { 
+    transition: opacity 0.3s ease, visibility 0.3s ease; 
+}
+
+.modal.hidden { 
+    opacity: 0; 
+    visibility: hidden; 
+    display: none; 
+}
+
+/* Fondo de Cuadrícula (Donaciones) */
+.bg-grid {
+    background-image: radial-gradient(var(--accent) 1px, transparent 0);
+    background-size: 24px 24px;
+}
+
+/* Efectos de PayPal */
+.paypal-glow {
+    box-shadow: 0 0 20px rgba(0, 112, 186, 0.4);
+}
+
+.paypal-glow:hover {
+    box-shadow: 0 0 35px rgba(0, 112, 186, 0.6);
+}
+
+/* --- UTILIDADES DE TEXTO --- */
+/* Estas reglas aseguran que Tailwind respete los colores del tema */
+.text-white { color: var(--text-main) !important; }
+.text-gray-400 { color: var(--text-muted) !important; }
+.text-blue-400 { color: var(--accent) !important; }
