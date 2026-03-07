@@ -7,6 +7,18 @@ const taskbarStyles = `
         --start-bg: #000080;
     }
 
+    /* --- CAPA NEON ESTABLE --- */
+    body.neon-active::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        backdrop-filter: hue-rotate(90deg) contrast(1.2);
+        z-index: 9999;
+    }
+
     body.theme-win2k { --tb-bg: #d4d0c8; --tb-text: #000; --start-bg: #000080; }
     body.theme-winxp { --tb-bg: #245edb; --tb-text: #fff; --start-bg: #388e3c; }
     body.theme-matrix { --tb-bg: #000; --tb-text: #0f0; --tb-border-light: #0f0; --tb-border-dark: #050; --start-bg: #050; }
@@ -49,7 +61,6 @@ const taskbarStyles = `
         cursor: pointer;
     }
 
-    /* Estilos del Reloj */
     #nexus-clock-tray {
         margin-left: auto;
         padding: 2px 8px;
@@ -105,6 +116,50 @@ const taskbarStyles = `
         color: white; font-weight: bold;
         padding: 10px 5px; text-align: center;
     }
+
+    #nexus-terminal {
+        position: fixed;
+        top: 20%; left: 20%;
+        width: 500px; height: 300px;
+        background: #000;
+        border: 2px solid var(--tb-border-light);
+        display: none;
+        flex-direction: column;
+        z-index: 2000;
+        box-shadow: 10px 10px 0 rgba(0,0,0,0.3);
+    }
+    #term-header {
+        background: var(--start-bg);
+        color: white;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        cursor: move;
+        user-select: none;
+    }
+    #term-body {
+        flex-grow: 1;
+        padding: 10px;
+        color: #0f0;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        overflow-y: auto;
+    }
+    #term-input-line {
+        display: flex;
+        gap: 5px;
+    }
+    #term-input {
+        background: transparent;
+        border: none;
+        color: #0f0;
+        font-family: inherit;
+        font-size: inherit;
+        outline: none;
+        flex-grow: 1;
+    }
 `;
 
 function initTaskbar() {
@@ -131,7 +186,7 @@ function initTaskbar() {
             <div class="flex">
                 <div class="start-sidebar">NEXUS OS</div>
                 <div class="flex-grow">
-                    <div class="start-menu-item" onclick="alert('Terminal lista.')">
+                    <div class="start-menu-item" onclick="toggleTerminal()">
                         <i class="fas fa-terminal"></i> Terminal
                     </div>
                     <div class="start-menu-item" onclick="alert('Nyper: Dragon-Fox Maker')">
@@ -159,7 +214,29 @@ function initTaskbar() {
             </div>
         </div>
     `;
+    
+    const term = document.createElement('div');
+    term.id = 'nexus-terminal';
+    term.innerHTML = `
+        <div id="term-header">
+            <span>NexusOS Command Prompt</span>
+            <span onclick="toggleTerminal()" style="cursor:pointer; padding: 0 5px;">X</span>
+        </div>
+        <div id="term-body">
+            <div>Nexus OS [Version 1.0.26]</div>
+            <div>(c) Nyper Corporation. All rights reserved.</div><br>
+            <div id="term-output"></div>
+            <div id="term-input-line">
+                <span>C:\\></span><input type="text" id="term-input" autofocus>
+            </div>
+        </div>
+    `;
+
     document.body.appendChild(bar);
+    document.body.appendChild(term);
+
+    // Activar arrastre en la terminal
+    setupTerminalDraggable(term);
 
     const startBtn = document.getElementById('start-btn-trigger');
     const menu = document.getElementById('start-menu');
@@ -173,7 +250,23 @@ function initTaskbar() {
         if (!menu.contains(e.target)) menu.style.display = 'none';
     };
 
-    // Inicializar actualización del reloj
+    const termInput = document.getElementById('term-input');
+    const termOutput = document.getElementById('term-output');
+
+    termInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            const val = termInput.value.toLowerCase().trim();
+            const line = document.createElement('div');
+            line.innerHTML = `C:\\>${termInput.value}`;
+            termOutput.appendChild(line);
+            
+            processCommand(val, termOutput);
+            
+            termInput.value = '';
+            document.getElementById('term-body').scrollTop = document.getElementById('term-body').scrollHeight;
+        }
+    });
+
     const updateClock = () => {
         const now = new Date();
         const clock = document.getElementById('nexus-clock');
@@ -185,6 +278,82 @@ function initTaskbar() {
     updateClock();
     setInterval(updateClock, 1000);
 }
+
+// LÓGICA DE ARRASTRE PARA LA TERMINAL
+function setupTerminalDraggable(el) {
+    let isDragging = false;
+    let offset = [0, 0];
+    const header = document.getElementById('term-header');
+
+    header.onmousedown = (e) => {
+        // No arrastrar si se hace clic en la 'X' de cerrar
+        if (e.target.innerText === 'X') return;
+        
+        isDragging = true;
+        offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY];
+        header.style.cursor = 'grabbing';
+    };
+
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        el.style.left = (e.clientX + offset[0]) + 'px';
+        el.style.top = (e.clientY + offset[1]) + 'px';
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+        header.style.cursor = 'move';
+    });
+}
+
+function processCommand(cmd, output) {
+    const res = document.createElement('div');
+    res.style.color = "#aaa";
+    
+    if (cmd === 'help') {
+        res.innerHTML = "Available commands: HELP, CLS, DATE, VER, EXIT, THEME [name], NEON, SYSTEM, LOAD";
+    } else if (cmd === 'cls') {
+        output.innerHTML = '';
+        return;
+    } else if (cmd === 'ver') {
+        res.innerHTML = "Nexus Operating System v1.0.26 [Custom Kernel]";
+    } else if (cmd === 'date') {
+        res.innerHTML = "Current date: " + new Date().toLocaleDateString();
+    } else if (cmd.startsWith('theme ')) {
+        const t = cmd.split(' ')[1];
+        if (['winxp', 'win2k', 'matrix', 'default'].includes(t)) {
+            setTheme(t === 'default' ? 'default' : 'theme-' + t);
+            res.innerHTML = "Updating system UI parameters...";
+        } else {
+            res.innerHTML = "Error: Theme not found.";
+        }
+    } else if (cmd === 'neon') {
+        document.body.classList.toggle('neon-active');
+        const isActive = document.body.classList.contains('neon-active');
+        res.innerHTML = isActive ? "Experimental visual drivers loaded." : "Standard visual drivers restored.";
+    } else if (cmd === 'system') {
+        res.innerHTML = "CPU: 6502 @ 1MHz | RAM: 64KB | GPU: NexusVGA";
+    } else if (cmd === 'exit') {
+        toggleTerminal();
+    } else if (cmd === 'load' || cmd === 'run') {
+        // Ahora está antes del error, así que sí se ejecutará
+        res.innerHTML = "Opening Nexus Loader...";
+        NexusLoader.openFileDialog();
+    } else if (cmd !== '') {
+        // Este siempre debe ir al final de la cadena de comandos
+        res.innerHTML = `'${cmd}' is not recognized as an internal or external command.`;
+    }
+    
+    output.appendChild(res);
+}
+
+window.toggleTerminal = function() {
+    const term = document.getElementById('nexus-terminal');
+    term.style.display = term.style.display === 'flex' ? 'none' : 'flex';
+    if (term.style.display === 'flex') {
+        document.getElementById('term-input').focus();
+    }
+};
 
 window.toggleThemeSubmenu = function() {
     const sub = document.getElementById('theme-links');

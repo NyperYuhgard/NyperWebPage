@@ -1,0 +1,94 @@
+/* NEXUS_EXECUTABLE | ID: dev_studio | Title: Nexus DevStudio Pro | Width: 800px | Height: 600px */
+
+(function(api) {
+    const ctx = api.getContainer();
+    
+    // 1. Estilos mejorados
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .studio-container { display: flex; flex-direction: column; height: 100%; font-family: 'Consolas', 'Monaco', monospace; background: #1e1e1e; }
+        .studio-toolbar { background: #2d2d2d; padding: 8px; display: flex; gap: 10px; border-bottom: 1px solid #3e3e3e; align-items: center; }
+        .studio-editor { 
+            flex: 1; 
+            background: #1e1e1e; 
+            color: #d4d4d4; 
+            border: none; 
+            padding: 15px; 
+            resize: none; 
+            outline: none; 
+            font-size: 14px; 
+            line-height: 1.5;
+            tab-size: 4;
+        }
+        .studio-btn { 
+            background: #3c3c3c; color: #fff; border: 1px solid #555; 
+            cursor: pointer; padding: 5px 15px; font-size: 12px; font-weight: bold;
+            transition: all 0.2s;
+        }
+        .studio-btn:hover { background: #007acc; border-color: #fff; }
+        .studio-input { 
+            background: #3c3c3c; color: #fff; border: 1px solid #555; 
+            font-size: 12px; padding: 4px 8px; border-radius: 2px;
+        }
+        .studio-status { background: #007acc; color: white; font-size: 10px; padding: 2px 10px; }
+    `;
+    ctx.appendChild(style);
+
+    const generateTemplate = (name = "NuevaApp", id = "new_app") => {
+        return `/* NEXUS_EXECUTABLE | ID: ${id} | Title: ${name} | Width: 400px | Height: 300px */\n\n` +
+               `(function(api) {\n` +
+               `    const ctx = api.getContainer();\n` +
+               `    ctx.innerHTML = '<h1 style="color:#0f0;">Hola desde ${name}</h1>';\n\n` +
+               `    api.onExit(() => {\n` +
+               `        console.log("${name} cerrada");\n` +
+               `    });\n` +
+               `})(NexusAPI);`;
+    };
+
+    ctx.innerHTML += `
+        <div class="studio-container">
+            <div class="studio-toolbar">
+                <span style="color:#888; font-size:11px;">PROYECTO:</span>
+                <input type="text" id="app-name" class="studio-input" placeholder="Nombre App" value="MiProyecto">
+                <button id="btn-new" class="studio-btn">Limpiar / Plantilla</button>
+                <div style="flex-grow:1"></div>
+                <button id="btn-run" class="studio-btn" style="background: #28a745; border-color: #218838;">▶ EJECUTAR</button>
+            </div>
+            <textarea id="code-area" class="studio-editor" spellcheck="false" wrap="off"></textarea>
+            <div class="studio-status" id="status-bar">Listo para codificar en Nexus OS</div>
+        </div>
+    `;
+
+    const editor = ctx.querySelector('#code-area');
+    const nameInput = ctx.querySelector('#app-name');
+    const status = ctx.querySelector('#status-bar');
+
+    editor.value = generateTemplate("MiProyecto", "mi_proyecto");
+
+    ctx.querySelector('#btn-new').onclick = () => {
+        const name = nameInput.value || "App";
+        const id = name.toLowerCase().replace(/\s+/g, '_');
+        editor.value = generateTemplate(name, id);
+        status.innerText = "Nueva plantilla generada.";
+    };
+
+    ctx.querySelector('#btn-run').onclick = () => {
+        if (window.NexusKernel) {
+            window.NexusKernel.executeRaw(editor.value, "Live_Build.nexus");
+            status.innerText = "Compilación enviada al Kernel con éxito.";
+            setTimeout(() => status.innerText = "Esperando cambios...", 3000);
+        }
+    };
+
+    // Soporte para TAB en el textarea
+    editor.onkeydown = function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            const start = this.selectionStart;
+            const end = this.selectionEnd;
+            this.value = this.value.substring(0, start) + "    " + this.value.substring(end);
+            this.selectionStart = this.selectionEnd = start + 4;
+        }
+    };
+
+})(NexusAPI);

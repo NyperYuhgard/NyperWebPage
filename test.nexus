@@ -1,0 +1,21 @@
+/* NEXUS_EXECUTABLE | ID: terminal_test | Title: Nexus Probe v1 | Width: 320px | Height: 180px */
+
+(function(api) {
+    const ctx = api.getContainer();
+    ctx.innerHTML = `
+        <div style="text-align:center; padding: 15px;">
+            <i class="fas fa-check-circle" style="font-size: 30px; color: #0f0;"></i>
+            <h3 style="margin-top:10px;">KERNEL LINK OK</h3>
+            <p style="font-size: 11px; color: #888;">La aplicación se ha cargado correctamente en el espacio de memoria virtual.</p>
+            <button id="btn-msg" style="margin-top:10px; background:#222; color:#0f0; border:1px solid #0f0; cursor:pointer; padding:5px 10px;">Pulsar</button>
+        </div>
+    `;
+
+    ctx.querySelector('#btn-msg').onclick = () => {
+        alert("¡Sistema .nexus funcionando perfectamente!");
+    };
+
+    api.onExit(() => {
+        console.log("Cerrando Nexus Probe...");
+    });
+})(NexusAPI);
