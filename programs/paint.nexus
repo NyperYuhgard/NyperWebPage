@@ -1,0 +1,76 @@
+/* NEXUS_EXECUTABLE | ID: nexus_paint_final | Title: Nexus Paint Ultra | Width: 700px | Height: 500px */
+
+(function(api) {
+    const ctx = api.getContainer();
+    
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .paint-wrapper { display: flex; flex-direction: column; height: 100%; background: #222; overflow: hidden; }
+        .paint-toolbar { background: #333; padding: 8px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid #444; flex-shrink: 0; z-index: 10; }
+        .canvas-viewport { flex-grow: 1; overflow: auto; background: #444; position: relative; }
+        .paint-canvas { background: white; cursor: crosshair; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    `;
+    ctx.appendChild(style);
+
+    ctx.innerHTML += `
+        <div class="paint-wrapper">
+            <div class="paint-toolbar">
+                <input type="color" id="color-picker" value="#00ff00">
+                <input type="range" id="brush-size" min="1" max="50" value="5">
+                <button id="clear-btn">Limpiar Todo</button>
+                <span style="color:#888; font-size:10px;">Tamaño fijo: 3000x2000px</span>
+            </div>
+            <div class="canvas-viewport">
+                <canvas class="paint-canvas" id="main-canvas" width="3000" height="2000"></canvas>
+            </div>
+        </div>
+    `;
+
+    const canvas = ctx.querySelector('#main-canvas');
+    const viewport = ctx.querySelector('.canvas-viewport');
+    const c = canvas.getContext('2d');
+    const colorPicker = ctx.querySelector('#color-picker');
+    const brushSize = ctx.querySelector('#brush-size');
+
+    let painting = false;
+
+    // --- LÓGICA DE DIBUJO ---
+    function getMousePos(e) {
+        const rect = canvas.getBoundingClientRect();
+        // Importante: Calculamos la posición relativa al CANVAS, no a la ventana
+        return {
+            x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left,
+            y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top
+        };
+    }
+
+    canvas.onmousedown = (e) => { painting = true; draw(e); };
+    window.addEventListener('mouseup', () => { painting = false; c.beginPath(); });
+    canvas.onmousemove = (e) => draw(e);
+
+    function draw(e) {
+        if (!painting) return;
+        const pos = getMousePos(e);
+
+        c.lineWidth = brushSize.value;
+        c.lineCap = 'round';
+        c.lineJoin = 'round';
+        c.strokeStyle = colorPicker.value;
+
+        c.lineTo(pos.x, pos.y);
+        c.stroke();
+        c.beginPath();
+        c.moveTo(pos.x, pos.y);
+    }
+
+    ctx.querySelector('#clear-btn').onclick = () => {
+        if(confirm("¿Borrar todo el lienzo?")) {
+            c.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    };
+
+    api.onExit(() => {
+        console.log("Nexus Paint Finalizado.");
+    });
+
+})(NexusAPI);

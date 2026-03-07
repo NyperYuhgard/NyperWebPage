@@ -1,3 +1,8 @@
+/**
+ * NEXUS PLAYER v2.93 - Audio Engine for Nexus OS
+ * Funciona de forma independiente y permite conexión de apps externas.
+ */
+
 const winampStyles = `
     .winamp-btn {
         background: #c0c0c0;
@@ -15,7 +20,6 @@ const winampStyles = `
         color: #00ff00; font-family: 'Courier New', monospace;
         text-shadow: 0 0 5px rgba(0,255,0,0.5);
     }
-    /* Estilos del Desplazamiento (Marquee) */
     .w-marquee-container {
         width: 100%;
         overflow: hidden;
@@ -42,7 +46,13 @@ const playlist = [
 ];
 
 let currentTrack = 0;
-const audio = new Audio(playlist[currentTrack].url);
+const audio = new Audio();
+// IMPORTANTE: Solo activar anonymous si el servidor lo soporta. 
+// Si da problemas de silencio, el juego de ritmo usará un modo de compatibilidad.
+// audio.crossOrigin = "anonymous"; 
+
+audio.src = playlist[currentTrack].url;
+window.nexusMainAudio = audio;
 
 function initWinamp() {
     const styleSheet = document.createElement("style");
@@ -54,7 +64,7 @@ function initWinamp() {
     player.className = 'fixed bottom-24 right-6 w-72 bg-[#2a2a2a] border-2 border-[#4a4a4a] shadow-[4px_4px_0px_#000] p-2 z-[60] select-none';
     player.innerHTML = `
         <div id="winamp-handle" class="bg-gradient-to-r from-[#000080] to-[#080808] text-[10px] px-2 py-1 flex justify-between items-center cursor-move border-b border-[#1a1a1a]">
-            <span class="text-white tracking-widest font-bold uppercase italic">NexusPlayer 2.91</span>
+            <span class="text-white tracking-widest font-bold uppercase italic">NexusPlayer 2.93</span>
             <button onclick="minimizeWinamp()" class="w-3 h-3 bg-[#c0c0c0] text-black flex items-center justify-center text-[8px] border border-black font-bold hover:bg-red-500 hover:text-white transition-colors">X</button>
         </div>
         <div class="bg-black p-2 mt-1 border border-[#3a3a3a] flex gap-3 h-16">
@@ -81,32 +91,23 @@ function initWinamp() {
     audio.ontimeupdate = () => {
         const mins = Math.floor(audio.currentTime / 60);
         const secs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
-        document.getElementById('w-time').innerText = `${mins}:${secs}`;
+        const timeDisplay = document.getElementById('w-time');
+        if(timeDisplay) timeDisplay.innerText = `${mins}:${secs}`;
+        
+        const progress = document.getElementById('w-progress');
         const percent = (audio.currentTime / audio.duration) * 100;
-        document.getElementById('w-progress').style.width = (percent || 0) + "%";
+        if(progress) progress.style.width = (percent || 0) + "%";
     };
 
     audio.onended = () => nextTrack();
     setupDraggable(player);
 }
 
-// --- FUNCIÓN DE MINIMIZAR ---
-function minimizeWinamp() {
-    // Oculta el reproductor
-    document.getElementById('winamp-player').style.display = 'none';
-    
-    // Aquí es donde tu barra de tareas externa debería "detectar" que se minimizó
-    // Por ejemplo, mostrando el botón en tu taskbar.js:
-    const taskButton = document.getElementById('task-nexus');
-    if (taskButton) {
-        taskButton.style.display = 'flex';
-    }
-}
-
-// --- FUNCIONES DE CONTROL ---
+// --- CONTROLES MEJORADOS ---
 function togglePlay() {
     if (audio.paused) {
-        audio.play();
+        // Promesa para manejar bloqueos de navegador
+        audio.play().catch(err => console.log("Esperando interacción..."));
         document.getElementById('btn-play').innerText = "PLAYING";
     } else {
         audio.pause();
@@ -133,14 +134,20 @@ function prevTrack() {
 function loadTrack() {
     audio.src = playlist[currentTrack].url;
     const titleEl = document.getElementById('w-title');
-    
-    titleEl.classList.remove('w-marquee-content');
-    void titleEl.offsetWidth; 
-    titleEl.classList.add('w-marquee-content');
-    
-    titleEl.innerText = playlist[currentTrack].name;
+    if(titleEl) {
+        titleEl.classList.remove('w-marquee-content');
+        void titleEl.offsetWidth; 
+        titleEl.classList.add('w-marquee-content');
+        titleEl.innerText = playlist[currentTrack].name;
+    }
     audio.play();
     document.getElementById('btn-play').innerText = "PLAYING";
+}
+
+function minimizeWinamp() {
+    document.getElementById('winamp-player').style.display = 'none';
+    const taskButton = document.getElementById('task-nexus');
+    if (taskButton) taskButton.style.display = 'flex';
 }
 
 function setupDraggable(el) {
@@ -150,13 +157,13 @@ function setupDraggable(el) {
         isDragging = true;
         offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY];
     };
-    document.onmousemove = (e) => {
+    document.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         el.style.left = (e.clientX + offset[0]) + 'px';
         el.style.top = (e.clientY + offset[1]) + 'px';
         el.style.bottom = 'auto'; el.style.right = 'auto';
-    };
-    document.onmouseup = () => isDragging = false;
+    });
+    document.addEventListener('mouseup', () => isDragging = false);
 }
 
 document.addEventListener('DOMContentLoaded', initWinamp);
