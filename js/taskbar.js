@@ -192,6 +192,9 @@ function initTaskbar() {
                     <div class="start-menu-item" onclick="alert('Nyper: Dragon-Fox Maker')">
                         <i class="fas fa-paw"></i> Fursona Info
                     </div>
+                    <div class="start-menu-item" onclick="toggleCRT()">
+                        <i class="fas fa-monitor"></i> Modo CRT
+                    </div>
                     
                     <hr class="border-gray-400 my-1">
                     
