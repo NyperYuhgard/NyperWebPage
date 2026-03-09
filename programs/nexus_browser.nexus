@@ -1,0 +1,40 @@
+/* NEXUS_EXECUTABLE | ID: nexus_nav | Title: Nexus Navigator | Width: 600px | Height: 450px */
+
+const container = NexusAPI.getContainer();
+
+// Estructura del navegador con estética Retro-Web
+container.innerHTML = `
+    <div style="display: flex; flex-direction: column; height: 100%; background: #c0c0c0; font-family: sans-serif;">
+        <div style="padding: 5px; background: #d4d0c8; border-bottom: 2px solid #808080; display: flex; gap: 5px; align-items: center;">
+            <button id="nav-back" style="padding: 2px 8px; font-size: 10px;">🠔</button>
+            <input type="text" id="nav-url" value="https://www.bing.com" 
+                   style="flex-grow: 1; font-size: 11px; padding: 3px; border: 2px inset #fff; background: #fff; color: #000;">
+            <button id="nav-go" style="padding: 2px 8px; font-size: 10px; font-weight: bold;">GO</button>
+        </div>
+        <div style="flex-grow: 1; background: #fff; position: relative;">
+            <iframe id="nav-frame" src="https://www.bing.com" 
+                    style="width: 100%; height: 100%; border: none;"></iframe>
+        </div>
+        <div style="font-size: 9px; padding: 2px 5px; background: #d4d0c8; border-top: 1px solid #808080;">
+            Zone: Trusted | Connectivity: 100mbps
+        </div>
+    </div>
+`;
+
+const frame = container.querySelector('#nav-frame');
+const input = container.querySelector('#nav-url');
+const goBtn = container.querySelector('#nav-go');
+
+// Lógica de navegación
+const navigate = () => {
+    let url = input.value.trim();
+    if (!url.startsWith('http')) url = 'https://' + url;
+    frame.src = url;
+};
+
+goBtn.onclick = navigate;
+input.onkeydown = (e) => { if (e.key === 'Enter') navigate(); };
+
+NexusAPI.onExit(() => {
+    console.log("Navigator session terminated.");
+});

@@ -1,0 +1,4 @@
+explorer.nexus
+vfs_test.nexus
+nexus_player.nexus
+GBC.nexus

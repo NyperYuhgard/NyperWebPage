@@ -369,3 +369,77 @@ window.restoreWinampFromTaskbar = function() {
 };
 
 document.addEventListener('DOMContentLoaded', initTaskbar);
+
+
+/**
+ * NEXUS TASKBAR PROCESS MONITOR
+ * Añade botones dinámicamente a la barra de tareas cuando se abren procesos.
+ */
+const TaskbarMonitor = {
+    init() {
+        // Observar cuando el Kernel abre una nueva ventana
+        window.addEventListener('nexus_process_started', (e) => {
+            const { id, title, windowRef } = e.detail;
+            this.createTaskButton(id, title, windowRef);
+        });
+
+        // Observar cuando el Kernel cierra un proceso para limpiar la barra
+        window.addEventListener('nexus_process_stopped', (e) => {
+            const btn = document.getElementById(`task-btn-${e.detail.id}`);
+            if (btn) btn.remove();
+        });
+    },
+
+    createTaskButton(id, title, windowRef) {
+        const taskContainer = document.getElementById('nexus-taskbar');
+        const btn = document.createElement('div');
+        
+        btn.id = `task-btn-${id}`;
+        btn.className = 'taskbar-app-btn';
+        btn.style.cssText = `
+            background: var(--tb-bg);
+            border: 2px solid;
+            border-color: var(--tb-border-light) var(--tb-border-dark) var(--tb-border-dark) var(--tb-border-light);
+            color: var(--tb-text);
+            padding: 2px 10px;
+            font-size: 11px;
+            min-width: 100px;
+            max-width: 150px;
+            cursor: pointer;
+            margin-right: 4px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        `;
+
+        btn.innerHTML = `<i class="fas fa-window-maximize"></i> ${title.toUpperCase()}`;
+
+        // Lógica de conmutación (Click para enfocar/minimizar)
+        btn.onclick = () => {
+            if (windowRef.style.display === 'none') {
+                windowRef.style.display = 'flex';
+                if(window.NexusKernel) window.NexusKernel.focusWindow(id);
+                btn.style.borderColor = 'var(--tb-border-dark) var(--tb-border-light) var(--tb-border-light) var(--tb-border-dark)';
+                btn.style.backgroundColor = 'rgba(0,0,0,0.1)';
+            } else {
+                // Si ya está visible, podrías elegir entre minimizarla o simplemente enfocarla
+                if (windowRef.style.zIndex === "100" || !window.NexusKernel) {
+                    windowRef.style.display = 'none';
+                    btn.style.borderColor = 'var(--tb-border-light) var(--tb-border-dark) var(--tb-border-dark) var(--tb-border-light)';
+                    btn.style.backgroundColor = 'var(--tb-bg)';
+                } else {
+                    window.NexusKernel.focusWindow(id);
+                }
+            }
+        };
+
+        // Insertar antes del reloj
+        taskContainer.insertBefore(btn, document.getElementById('nexus-clock-tray'));
+    }
+};
+
+// Iniciar el monitor al cargar
+document.addEventListener('DOMContentLoaded', () => TaskbarMonitor.init());

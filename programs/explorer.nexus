@@ -1,0 +1,71 @@
+/* NEXUS_EXECUTABLE | ID: vfs_explorer | Title: Nexus Explorer | Width: 500px | Height: 350px */
+
+const container = NexusAPI.getContainer();
+const vfs = NexusAPI.vfs;
+
+// Estilos para el explorador (fiel a tu estilo retro)
+container.style.display = "flex";
+container.style.flexDirection = "column";
+container.style.height = "100%";
+
+const renderExplorer = () => {
+    // Obtener todos los archivos del VFS
+    const files = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith('nexus_vfs_')) {
+            const rawData = localStorage.getItem(key);
+            files.push({
+                key: key.replace('nexus_vfs_', ''),
+                fullKey: key,
+                data: JSON.parse(rawData)
+            });
+        }
+    }
+
+    container.innerHTML = `
+        <div style="background: #eee; color: #000; padding: 5px; display: flex; gap: 10px; border-bottom: 1px solid #888; font-size: 11px;">
+            <span style="cursor:pointer;" id="refresh_vfs"><i class="fas fa-sync"></i> Actualizar</span>
+            <span style="color: #888;">|</span>
+            <span>Unidad: VFS (C:)</span>
+        </div>
+        <div id="file_list" style="flex-grow: 1; background: #fff; color: #000; padding: 10px; font-family: 'Tahoma', sans-serif;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                <thead>
+                    <tr style="text-align: left; border-bottom: 1px solid #ccc; color: #555;">
+                        <th style="padding: 5px;">Nombre</th>
+                        <th style="padding: 5px;">Tipo</th>
+                        <th style="padding: 5px;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="vfs_body">
+                    ${files.map(f => `
+                        <tr style="border-bottom: 1px solid #eee;" class="vfs-row">
+                            <td style="padding: 8px;"><i class="fas fa-file-code" style="color: #003ac5; margin-right: 8px;"></i>${f.key}</td>
+                            <td style="padding: 8px; color: #666;">Nexus Data</td>
+                            <td style="padding: 8px;">
+                                <button onclick="window.deleteVFS('${f.fullKey}')" style="color: red; cursor: pointer; border: none; background: none;"><i class="fas fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                    ${files.length === 0 ? '<tr><td colspan="3" style="text-align:center; padding: 20px; color: #999;">Carpeta vacía</td></tr>' : ''}
+                </tbody>
+            </table>
+        </div>
+        <div style="background: #eee; padding: 3px 10px; font-size: 10px; color: #444; border-top: 1px solid #888;">
+            ${files.length} objeto(s) en VFS
+        </div>
+    `;
+
+    container.querySelector('#refresh_vfs').onclick = renderExplorer;
+};
+
+// Función global temporal para poder borrar desde el onclick del string HTML
+window.deleteVFS = (fullKey) => {
+    if(confirm("¿Eliminar este archivo de forma permanente?")) {
+        localStorage.removeItem(fullKey);
+        renderExplorer();
+    }
+};
+
+renderExplorer();

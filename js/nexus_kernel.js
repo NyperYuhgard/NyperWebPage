@@ -1,10 +1,19 @@
 /**
- * NEXUS OS - KERNEL RUNTIME v1.2
+ * NEXUS OS - KERNEL RUNTIME v1.2 (Persistence Patch)
  * Gestión de procesos, ventanas redimensionables y ejecución de binarios .nexus
  */
 
 const NexusKernel = {
     activeProcesses: new Map(),
+
+    // --- MÓDULO DE PERSISTENCIA ---
+    VFS: {
+        save: (key, data) => localStorage.setItem(`nexus_vfs_${key}`, JSON.stringify(data)),
+        read: (key) => {
+            const data = localStorage.getItem(`nexus_vfs_${key}`);
+            return data ? JSON.parse(data) : null;
+        }
+    },
 
     async execute(fileUrl) {
         try {
@@ -46,13 +55,20 @@ const NexusKernel = {
             
             const processApi = {
                 getContainer: () => win.querySelector('.win-body'),
-                onExit: (callback) => { win.onClose = callback; }
+                onExit: (callback) => { win.onClose = callback; },
+                vfs: this.VFS 
             };
 
             const run = new Function('NexusAPI', cleanCode);
             run(processApi);
 
             this.activeProcesses.set(meta.id, win);
+
+            // --- NOTIFICAR A TASKBAR.JS ---
+            window.dispatchEvent(new CustomEvent('nexus_process_started', {
+                detail: { id: meta.id, title: meta.title, windowRef: win }
+            }));
+
             console.log(`[Kernel] Proceso cargado con éxito: ${meta.title}`);
 
         } catch (err) {
@@ -66,7 +82,6 @@ const NexusKernel = {
         win.className = 'nexus-window';
         const offset = this.activeProcesses.size * 25;
         
-        // Estilos base para permitir redimensionamiento y flexbox
         win.style.cssText = `
             width: ${meta.width}; 
             height: ${meta.height}; 
@@ -97,7 +112,6 @@ const NexusKernel = {
 
         document.body.appendChild(win);
 
-        // Lógica de Maximizar
         const maxBtn = win.querySelector('.max-btn');
         let isMaximized = false;
         let oldPos = {};
@@ -108,7 +122,7 @@ const NexusKernel = {
                 win.style.top = "0";
                 win.style.left = "0";
                 win.style.width = "100vw";
-                win.style.height = "calc(100vh - 40px)"; // Espacio para la taskbar
+                win.style.height = "calc(100vh - 40px)";
                 win.style.resize = "none";
             } else {
                 win.style.top = oldPos.t;
@@ -120,15 +134,26 @@ const NexusKernel = {
             isMaximized = !isMaximized;
         };
 
-        // Lógica de Cierre
         win.querySelector('.close-btn').onclick = () => {
             if (win.onClose) win.onClose();
             win.remove();
             this.activeProcesses.delete(meta.id);
+
+            // --- NOTIFICAR CIERRE A TASKBAR.JS ---
+            window.dispatchEvent(new CustomEvent('nexus_process_stopped', {
+                detail: { id: meta.id }
+            }));
         };
 
         this.makeDraggable(win);
         return win;
+    },
+
+    // --- FUNCIÓN PARA ENFOCAR (Usada por Taskbar) ---
+    focusWindow(id) {
+        document.querySelectorAll('.nexus-window, #nexus-terminal').forEach(w => w.style.zIndex = "1500");
+        const target = this.activeProcesses.get(id);
+        if (target) target.style.zIndex = "3000";
     },
 
     makeDraggable(el) {
@@ -141,8 +166,9 @@ const NexusKernel = {
             isDragging = true;
             offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY];
             
-            document.querySelectorAll('.nexus-window, #nexus-terminal').forEach(w => w.style.zIndex = "1500");
-            el.style.zIndex = "3000";
+            // Usamos la nueva función focusWindow para consistencia
+            const metaId = Array.from(this.activeProcesses.entries()).find(([k, v]) => v === el)?.[0];
+            if(metaId) this.focusWindow(metaId);
         };
 
         document.addEventListener('mousemove', (e) => {

@@ -1,0 +1,50 @@
+/* NEXUS_EXECUTABLE | ID: vfs_inspector | Title: VFS Persistencia Test | Width: 350px | Height: 250px */
+
+const container = NexusAPI.getContainer();
+const vfs = NexusAPI.vfs;
+
+// Estilo rápido para la interfaz de pruebas
+container.style.padding = "15px";
+container.style.display = "flex";
+container.style.flexDirection = "column";
+container.style.gap = "10px";
+
+container.innerHTML = `
+    <div style="color: #0f0; font-size: 12px; margin-bottom: 5px;">> VFS PERSISTENCE MODULE ACTIVE</div>
+    <input type="text" id="vfs_input" placeholder="Escribe algo para guardar..." 
+        style="background: #111; border: 1px solid #0f0; color: #0f0; padding: 5px; font-family: monospace; outline: none;">
+    <div style="display: flex; gap: 5px;">
+        <button id="btn_save" style="background: #003ac5; color: white; border: 1px solid #fff; padding: 5px 10px; cursor: pointer; flex: 1;">GUARDAR</button>
+        <button id="btn_load" style="background: #333; color: white; border: 1px solid #fff; padding: 5px 10px; cursor: pointer; flex: 1;">CARGAR</button>
+    </div>
+    <div id="vfs_status" style="margin-top: 10px; font-size: 11px; color: #888; border-top: 1px dotted #444; pt-5">
+        Esperando acción...
+    </div>
+`;
+
+const input = container.querySelector('#vfs_input');
+const status = container.querySelector('#vfs_status');
+
+// Lógica de Guardado
+container.querySelector('#btn_save').onclick = () => {
+    const val = input.value;
+    if(!val) return;
+    
+    vfs.save('test_data', { content: val, timestamp: Date.now() });
+    status.innerHTML = `<span style="color: #ff0;">[OK]</span> Datos guardados en VFS.`;
+    input.value = "";
+};
+
+// Lógica de Carga
+container.querySelector('#btn_load').onclick = () => {
+    const data = vfs.read('test_data');
+    if(data) {
+        status.innerHTML = `
+            <span style="color: #0f0;">[LOAD]</span> Recuperado:<br>
+            > "${data.content}"<br>
+            > TS: ${new Date(data.timestamp).toLocaleTimeString()}
+        `;
+    } else {
+        status.innerHTML = `<span style="color: #f00;">[ERR]</span> No hay datos previos.`;
+    }
+};

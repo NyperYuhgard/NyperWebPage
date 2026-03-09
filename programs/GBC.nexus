@@ -1,0 +1,20 @@
+/* NEXUS_EXECUTABLE | ID: web_mirror | Title: GBC Emu | Width: 800px | Height: 600px */
+
+const container = NexusAPI.getContainer();
+const targetURL = "https://ardean.github.io/jsGBC-web/"; // <--- Cambia esto
+
+container.innerHTML = `
+    <div style="width: 100%; height: 100%; overflow: hidden; background: #fff;">
+        <iframe 
+            src="${targetURL}" 
+            style="width: 100%; height: 100%; border: none;"
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            title="Nexus Web Mirror">
+        </iframe>
+    </div>
+`;
+
+// Opcional: Limpiar algo al cerrar
+NexusAPI.onExit(() => {
+    console.log("Cerrando espejo web de: " + targetURL);
+});

@@ -1,0 +1,104 @@
+/* NEXUS_EXECUTABLE | ID: nexus_player | Title: Nexus Player 2.97 | Width: 320px | Height: 350px */
+
+const container = NexusAPI.getContainer();
+
+const playerStyles = `
+    .player-body { background: #2a2a2a; color: #0f0; font-family: 'Courier New', monospace; height: 100%; display: flex; flex-direction: column; }
+    .lcd-display { background: #000; border: 2px solid #1a1a1a; padding: 10px; margin: 5px; box-shadow: inset 0 0 10px #003300; }
+    .track-info { font-size: 10px; height: 14px; overflow: hidden; color: #00ff00; margin-top: 4px; }
+    .playlist-area { flex-grow: 1; overflow-y: auto; background: #050505; border: 1px solid #444; margin: 5px; }
+    .playlist-item { padding: 6px 8px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 9px; color: #008800; display: flex; justify-content: space-between; }
+    .playlist-item:hover { background: #111; }
+    .playlist-item.active { color: #fff; background: #000080; }
+    .controls { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 5px; background: #333; }
+    .p-btn { background: #c0c0c0; border: 1px solid #fff; border-right: 2px solid #404040; border-bottom: 2px solid #404040; color: #000; font-size: 9px; cursor: pointer; padding: 8px 0; font-weight: bold; }
+    .p-btn:active { border: 1px solid #404040; background: #a0a0a0; }
+    .upload-bar { padding: 8px; background: #222; border-top: 1px solid #444; }
+`;
+
+let playlist = []; // Solo vive en esta sesión
+let currentIdx = 0;
+let audio = new Audio();
+
+container.innerHTML = `
+    <style>${playerStyles}</style>
+    <div class="player-body">
+        <div class="lcd-display">
+            <div id="p-time" style="font-size: 24px; font-weight: bold;">00:00</div>
+            <div id="p-title" class="track-info">ESPERANDO MÚSICA...</div>
+            <div style="width: 100%; background: #111; height: 4px; margin-top: 8px;">
+                <div id="p-progress" style="width: 0%; height: 100%; background: #00ff00;"></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="p-btn" id="p-prev">PREV</button>
+            <button class="p-btn" id="p-play">PLAY</button>
+            <button class="p-btn" id="p-pause">PAUSE</button>
+            <button class="p-btn" id="p-stop">STOP</button>
+            <button class="p-btn" id="p-next">NEXT</button>
+        </div>
+        <div class="playlist-area" id="p-list">
+            <div style="color: #444; text-align: center; padding-top: 40px; font-size: 10px;">LISTA VACÍA</div>
+        </div>
+        <div class="upload-bar">
+            <input type="file" id="nexus-file-input" style="font-size: 9px; color: #888;" accept="audio/mpeg" multiple>
+        </div>
+    </div>
+`;
+
+const renderList = () => {
+    const listContainer = container.querySelector('#p-list');
+    if (playlist.length === 0) return;
+    
+    listContainer.innerHTML = playlist.map((file, i) => `
+        <div class="playlist-item ${i === currentIdx ? 'active' : ''}" data-idx="${i}">
+            <span>${(i+1).toString().padStart(2, '0')}. ${file.name.substring(0, 30)}</span>
+        </div>
+    `).join('');
+
+    listContainer.querySelectorAll('.playlist-item').forEach(item => {
+        item.onclick = () => playTrack(parseInt(item.dataset.idx));
+    });
+};
+
+const playTrack = (idx) => {
+    if (!playlist[idx]) return;
+    currentIdx = idx;
+
+    if (audio.src) URL.revokeObjectURL(audio.src);
+    audio.src = URL.createObjectURL(playlist[currentIdx]);
+    audio.play();
+    
+    container.querySelector('#p-title').innerText = playlist[currentIdx].name.toUpperCase();
+    renderList();
+};
+
+// --- EVENTOS ---
+container.querySelector('#nexus-file-input').onchange = (e) => {
+    const newFiles = Array.from(e.target.files);
+    if (newFiles.length > 0) {
+        playlist = [...playlist, ...newFiles];
+        renderList();
+        if (audio.paused && !audio.src) playTrack(playlist.length - newFiles.length);
+    }
+};
+
+container.querySelector('#p-play').onclick = () => playlist.length > 0 && audio.play();
+container.querySelector('#p-pause').onclick = () => audio.pause();
+container.querySelector('#p-stop').onclick = () => { audio.pause(); audio.currentTime = 0; };
+container.querySelector('#p-next').onclick = () => playTrack((currentIdx + 1) % playlist.length);
+container.querySelector('#p-prev').onclick = () => playTrack((currentIdx - 1 + playlist.length) % playlist.length);
+
+audio.ontimeupdate = () => {
+    const mins = Math.floor(audio.currentTime / 60);
+    const secs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+    container.querySelector('#p-time').innerText = `${mins}:${secs}`;
+    container.querySelector('#p-progress').style.width = ((audio.currentTime / audio.duration) * 100 || 0) + "%";
+};
+
+audio.onended = () => container.querySelector('#p-next').click();
+
+NexusAPI.onExit(() => {
+    audio.pause();
+    if (audio.src) URL.revokeObjectURL(audio.src);
+});
