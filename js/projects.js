@@ -6,6 +6,7 @@ const categories = {
         items: [
             { name: "Crash Bandicoot 3 Warped", link: "https://github.com/NyperYuhgard/Crash-Bandicoot-Warped", tag: "MIPS / PS1" },
             { name: "Sonic Classics", link: "https://github.com/NyperYuhgard/Sonic-Classics", tag: "Sega Genesis" },
+            { name: "Knuckles In Sonic 2", link: "https://github.com/NyperYuhgard/KiS2", tag: "Sega Genesis" },
             { name: "Sonic 2 (Sep 14 Build)", link: "https://github.com/NyperYuhgard/Sonic-2-September-14-1992-Pre-Beta-prototype", tag: "Historical Build" },
             { name: "Sonic 2 (Aug 21 Build)", link: "https://github.com/NyperYuhgard/Sonic-2-August-21-1992-Alpha-prototype", tag: "Historical Build" },
             { name: "Sonic 3 (Nov 03)", link: "https://github.com/NyperYuhgard/Sonic-3-Beta-Dissembly", tag: "Prototype" },
@@ -39,6 +40,22 @@ const categories = {
         desc: "Software para usar Proton sin depender de Steam.",
         items: [
             { name: "Proton Launcher", link: "https://github.com/NyperYuhgard/proton-launcher", tag: "Optimization" }
+        ]
+    },
+    personal: {
+        title: "Proyectos Personales",
+        mainImg: "images/Proton.png",
+        desc: "Proyectos sin categoria definida.",
+        items: [
+            { name: "Sonic 1 PC Port", link: "https://github.com/NyperYuhgard/sonic1_pc", tag: "Ports" },
+            { name: "Crash Bash Recompiled", link: "https://github.com/NyperYuhgard/BashRecomp", tag: "Recompilations" },
+            { name: "Crash Bandicoot Recompiled", link: "https://github.com/NyperYuhgard/BandiRecomp", tag: "Recompilations" },
+            { name: "Crash Team Racing PC Port (Nyper Version)", link: "https://github.com/NyperYuhgard/CTR-PC-Port", tag: "Ports" },
+            { name: "NyxOS", link: "https://nyperyuhgard.github.io/NyxOS-webpage/", tag: "Operative System" },
+            { name: "NyxGPT (Web Version)", link: "https://nyperyuhgard.github.io/Nyx-Gpt/", tag: "IA Model Concept" },
+            { name: "Furry North+ Webpage (Propuesta Rechazada)", link: "https://github.com/NyperYuhgard/FN-WebPage", tag: "WebPage" },
+            { name: "MobiusCore Webpage (Proyecto avandonado)", link: "https://nyperyuhgard.github.io/MobiusCore/index.html", tag: "WebPage" },
+            { name: "Ming Wolf Webpage (Under Construction)", link: "https://nyperyuhgard.github.io/MingWebPage/Index.html", tag: "WebPage" }
         ]
     }
 };
