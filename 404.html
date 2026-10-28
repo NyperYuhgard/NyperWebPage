@@ -4,42 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SYSTEM_FATAL_ERROR_404</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
     <style>
-        /* Estética Base BSOD */
         body {
-            background-color: #0000aa; /* Azul BIOS/Windows */
+            background-color: #0000aa;
             color: #ffffff;
-            font-family: 'Lucida Console', Monaco, monospace;
+            font-family: 'VT323', 'Lucida Console', Monaco, monospace;
+            font-size: min(2.1vw, 2.9vh, 26px);
+            line-height: 1.28;
             margin: 0;
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 8vh 12vw;
             height: 100vh;
-            overflow: hidden;
             box-sizing: border-box;
+            overflow: hidden;
             transition: background-color 0.1s;
         }
 
         .container {
-            max-width: 900px;
-            line-height: 1.6;
+            max-width: 88ch;
         }
+
+        p { margin: 0 0 1.3em; }
 
         .error-header {
             background-color: #aaaaaa;
             color: #0000aa;
             display: inline-block;
-            padding: 2px 15px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-transform: uppercase;
+            padding: 0 18px;
+            margin: 0 0 1.6em;
         }
 
-        .code-block {
-            margin: 25px 0;
-            font-size: 0.9em;
-            opacity: 0.9;
+        .code-block { margin: 0 0 1.3em; }
+        .code-block span { display: inline-block; min-width: 3ch; }
+
+        .continue { margin-bottom: 0; }
+
+        ul {
+            list-style: disc;
+            margin: 0 0 1.3em;
+            padding-left: 2.6em;
         }
 
         .blink {
@@ -61,7 +66,7 @@
             60% { transform: translate(-3px, 1px) rotate(0deg); }
             70% { transform: translate(3px, 1px) rotate(-1deg); }
             80% { transform: translate(-1px, -1px) rotate(1deg); }
-            90% { transform: translate(1px, 2px) rotate(0deg); }
+            90% { transform: translate(1px, 2px) rotate(-1deg); }
             100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
@@ -82,17 +87,10 @@
             padding: 40px;
             border: 10px double white;
             font-size: 4rem;
-            font-weight: 900;
             z-index: 100;
             text-align: center;
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
             white-space: nowrap;
-        }
-
-        a {
-            color: #ffffff;
-            text-decoration: none;
-            border-bottom: 2px solid #fff;
         }
     </style>
 </head>
@@ -100,12 +98,14 @@
 
     <div id="content" class="container">
         <div class="error-header">NEXUS_OS_KERNEL_PANIC</div>
-        
-        <p>Se ha encontrado un error crítico en la dirección de memoria 0x404. La página solicitada ha sido devorada por un dragón-zorro o simplemente no existe.</p>
 
-        <p>PAGE_NOT_FOUND (404)</p>
+        <p>Se ha detectado un problema y NexusOS ha sido cerrado para evitar dañar su ordenador.</p>
 
-        <p>Si esta es la primera vez que ve esta pantalla, por favor mantenga la calma. Si el error persiste, realice lo siguiente:</p>
+        <p>PAGE_FAULT_IN_NONPAGED_AREA (404)</p>
+
+        <p>La página solicitada ha sido devorada por un dragón-zorro o simplemente no existe en este volumen.</p>
+
+        <p>Si esta es la primera vez que ve esta pantalla de error, reinicie su ordenador. Si el error persiste, siga estos pasos:</p>
 
         <ul>
             <li>Verifique que no haya escrito la URL con las patas.</li>
@@ -113,12 +113,14 @@
             <li>Si usa Linux Mint, asegurese de que sus repositorios estén actualizados.</li>
         </ul>
 
+        <p>Información técnica:</p>
+
         <div class="code-block">
-            *** STOP: 0x00000404 (0x00000001, 0x00000000, 0x00000000, 0x00000000)<br>
-            *** NEXUS.SYS - Address 0x2026FF00 base at 0x20260000, DateStamp 65f1a2b3
+            <span>***</span> STOP: 0x00000404 (0x00000001, 0x00000000, 0x00000000, 0x00000000)<br>
+            <span>***</span> NEXUS.SYS - Address 0x2026FF00 base at 0x20260000, DateStamp 65f1a2b3
         </div>
 
-        <p>Presione <span style="font-weight: bold; background: white; color: #0000aa; padding: 0 5px;">ENTER</span> para volver al inicio <span class="blink">_</span></p>
+        <p class="continue">Presione <span style="background: #ffffff; color: #0000aa;"> ENTER </span> para volver al inicio <span class="blink">_</span></p>
     </div>
 
     <div id="rage-overlay">¡¡¡ HE DICHO ENTER !!!</div>
