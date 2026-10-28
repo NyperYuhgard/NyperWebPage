@@ -205,3 +205,34 @@ body:not(.theme-matrix):not(.theme-win2k):not(.theme-winxp) .hero-title {
     #ambient-bg, .hero-photo, .hero-sub::after, #donar .bg-grid { animation: none; }
     #proyectos .glass-card, #modalContent a, #projectModal > .glass-card { transition: none; }
 }
+
+/* --- MOVIL --- */
+@media (max-width: 767px) {
+    nav.glass-card { padding: 0.5rem 0; }
+    nav .max-w-6xl { padding: 0 1rem; display: block; }
+    nav .font-bold.text-xl { font-size: 1.05rem; display: block; text-align: center; margin-bottom: 0.35rem; }
+    nav .space-x-8 { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.3rem 1.1rem; }
+    nav .space-x-8 > * + * { margin-left: 0; }
+    nav .space-x-8 a { font-size: 0.72rem; }
+
+    header#inicio { padding-top: 8.5rem; padding-bottom: 3rem; }
+    .hero-title { font-size: 2.4rem; line-height: 1.25; }
+    .hero-sub { font-size: 1rem; }
+    .hero-photo { width: 9.5rem; height: 9.5rem; }
+
+    section { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+    #proyectos h2, #sobre-mi h2 { font-size: 1.55rem; }
+    #sobre-mi .grid { grid-template-columns: repeat(2, 1fr); }
+
+    #donar .glass-card { padding: 1.75rem 1.25rem; border-radius: 1.75rem !important; }
+    #donar h2 { font-size: 1.75rem; }
+    #donar .paypal-glow { padding: 0.9rem 1.75rem; font-size: 1.05rem; }
+
+    #modalContent { padding: 1.5rem !important; }
+    #modalContent h2 { font-size: 1.55rem; }
+
+    #winamp-player { right: 1rem !important; width: calc(100vw - 2rem) !important; max-width: 18rem; }
+    #nexus-terminal { width: calc(100vw - 2rem) !important; height: 55vh !important; left: 1rem !important; top: 20vh !important; }
+    .nexus-window { left: 0.5rem !important; width: calc(100vw - 1rem) !important; max-height: 65vh; }
+    #boot-screen { padding: 1rem !important; }
+}
