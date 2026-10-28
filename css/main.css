@@ -5,6 +5,8 @@
     --card-border: rgba(255, 255, 255, 0.1);
     --text-main: #ffffff;
     --text-muted: #9ca3af; /* gray-400 */
+    --text-body: #d1d5db;  /* gray-300: lectura larga sobre fondo oscuro */
+    --text-question: #3b82f6;
     --accent: #3b82f6;     /* blue-500 */
     --nav-bg: rgba(255, 255, 255, 0.05);
     --font-ui: 'Space Grotesk', 'Segoe UI', Tahoma, sans-serif;

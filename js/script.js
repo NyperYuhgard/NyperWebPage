@@ -124,3 +124,33 @@ window.onresize = () => {
 };
 
 window.onclick = (e) => { if (e.target.id === 'projectModal') closeModal(); }
+
+const NACIMIENTO = new Date(2003, 6, 6);
+const MUDANZA_LINUX = new Date(2025, 10, 13);
+
+// Calculados desde la fecha: nadie tiene que actualizar la edad a mano cada 6 de julio.
+function edadActual(hoy) {
+    let anios = hoy.getFullYear() - NACIMIENTO.getFullYear();
+    if (hoy < new Date(hoy.getFullYear(), NACIMIENTO.getMonth(), NACIMIENTO.getDate())) anios--;
+    return anios;
+}
+
+function tiempoDesde(desde, hoy) {
+    let meses = (hoy.getFullYear() - desde.getFullYear()) * 12 + (hoy.getMonth() - desde.getMonth());
+    if (hoy.getDate() < desde.getDate()) meses--;
+    const ancla = new Date(desde.getFullYear(), desde.getMonth() + meses, desde.getDate());
+    return [meses, Math.floor((hoy - ancla) / 86400000)];
+}
+
+function pintaDatos() {
+    const hoy = new Date();
+    const edad = document.getElementById('bio-edad');
+    if (edad) edad.textContent = edadActual(hoy) + ' años';
+    const up = document.getElementById('bio-uptime');
+    if (up) {
+        const [meses, dias] = tiempoDesde(MUDANZA_LINUX, hoy);
+        up.textContent = 'Linux: ' + meses + ' meses ' + dias + ' días';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', pintaDatos);

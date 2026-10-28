@@ -32,6 +32,9 @@ body.theme-win2k {
     --card-border: #808080;
     --text-main: #000000;
     --text-muted: #404040;
+    /* El teal de escritorio se come los grises: texto largo en negro puro */
+    --text-body: #000000;
+    --text-question: #000000;
     --accent: #000080;
     --nav-bg: #d4d0c8;
 }
@@ -237,6 +240,8 @@ body.theme-matrix {
     --card-border: #00ff41;
     --text-main: #00ff41;
     --text-muted: #0f9b3f;
+    --text-body: #2fd85c;
+    --text-question: #00ff41;
     --accent: #00ff41;
     background-color: black !important;
     font-size: 1.12rem;
@@ -293,6 +298,10 @@ body.theme-winxp {
     --card-border: #0831d9;
     --text-main: #000000;
     --text-muted: #4a4a4a;
+    /* Bliss es claro y saturado: el gris de Tailwind ahí se ensucia */
+    --text-body: #000000;
+    /* El azul de Luna se hunde en el cielo de Bliss: la pregunta usa navy */
+    --text-question: #000080;
     --accent: #0a55cf;
     --nav-bg: #245edb;
 }
