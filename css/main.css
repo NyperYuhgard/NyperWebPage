@@ -7,6 +7,9 @@
     --text-muted: #9ca3af; /* gray-400 */
     --accent: #3b82f6;     /* blue-500 */
     --nav-bg: rgba(255, 255, 255, 0.05);
+    --font-ui: 'Space Grotesk', 'Segoe UI', Tahoma, sans-serif;
+    --font-display: 'Chakra Petch', 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
 }
 
 /* --- ESTILOS BASE --- */

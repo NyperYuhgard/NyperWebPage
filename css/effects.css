@@ -1,12 +1,39 @@
+/* --- TIPOGRAFIA POR TEMA --- */
+body { font-family: var(--font-ui) !important; }
+h1, h2, h3 { font-family: var(--font-display) !important; }
+.font-mono { font-family: var(--font-mono) !important; }
+
+body.theme-win2k #projectModal:not(.hidden),
+body.theme-win2k #projectModal:not(.hidden) > .glass-card,
+body.theme-winxp #projectModal:not(.hidden) > .glass-card { animation: none; }
+
+/* Los grises de Tailwind vienen pensados para fondo oscuro */
+body.theme-win2k .text-gray-200,
+body.theme-winxp .text-gray-200,
+body.theme-matrix .text-gray-200,
+body.theme-win2k .text-gray-300,
+body.theme-winxp .text-gray-300,
+body.theme-matrix .text-gray-300 { color: var(--text-main) !important; }
+
+body.theme-win2k .text-gray-500,
+body.theme-winxp .text-gray-500 { color: var(--text-muted) !important; }
+
+body.theme-win2k #modalContent a span:last-child,
+body.theme-winxp #modalContent a span:last-child { font-style: normal; letter-spacing: 0.4px; }
+
+body.theme-win2k { --font-ui: 'Arimo', 'Tahoma', 'MS Sans Serif', Verdana, sans-serif; --font-display: 'Arimo', 'Tahoma', Verdana, sans-serif; --font-mono: 'Arimo', 'Courier New', monospace; }
+body.theme-winxp { --font-ui: 'Titillium Web', 'Trebuchet MS', Tahoma, sans-serif; --font-display: 'Titillium Web', Tahoma, sans-serif; --font-mono: 'Titillium Web', 'Courier New', monospace; }
+body.theme-matrix { --font-ui: 'VT323', 'Courier New', monospace; --font-display: 'VT323', 'Courier New', monospace; --font-mono: 'VT323', 'Courier New', monospace; }
+
 /* --- TEMA WINDOWS 2000 (Retro Tech) --- */
 body.theme-win2k {
-    --bg-main: #008080 !important; /* El clásico verde azulado de Win9x/2k */
-    --card-bg: #c0c0c0;
-    --card-border: #ffffff;
+    --bg-main: #008080;
+    --card-bg: #d4d0c8;
+    --card-border: #808080;
     --text-main: #000000;
-    --text-muted: #424242;
+    --text-muted: #404040;
     --accent: #000080;
-    font-family: 'Tahoma', 'Verdana', sans-serif !important;
+    --nav-bg: #d4d0c8;
 }
 
 body.theme-win2k .gradient-bg {
@@ -14,34 +41,210 @@ body.theme-win2k .gradient-bg {
     background-image: none !important;
 }
 
+body.theme-win2k [class*="rounded"] { border-radius: 0 !important; }
+body.theme-win2k [class*="italic"] { font-style: normal !important; }
+body.theme-win2k [class*="tracking"] { letter-spacing: normal !important; }
+body.theme-win2k .animate-pulse { animation: none !important; }
+
 body.theme-win2k .glass-card {
-    background: #c0c0c0 !important;
+    background: #d4d0c8 !important;
     backdrop-filter: none !important;
-    border-top: 2px solid #ffffff !important;
-    border-left: 2px solid #ffffff !important;
-    border-right: 2px solid #808080 !important;
-    border-bottom: 2px solid #808080 !important;
+    border: 1px solid #808080 !important;
+    border-top-color: #ffffff !important;
+    border-left-color: #ffffff !important;
     border-radius: 0 !important;
-    box-shadow: none !important;
+    box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #ffffff, 2px 2px 4px rgba(0, 0, 0, 0.35) !important;
 }
 
-body.theme-win2k nav {
-    background: #c0c0c0 !important;
-    border-bottom: 2px solid #808080 !important;
+body.theme-win2k nav.glass-card {
+    background: #d4d0c8 !important;
+    border-bottom: 1px solid #808080 !important;
+    box-shadow: inset 0 1px 0 #ffffff, 0 2px 5px rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: none !important;
 }
 
-body.theme-win2k .text-blue-400 { color: #000080 !important; }
+body.theme-win2k nav a:hover { color: #000080 !important; }
+body.theme-win2k nav.glass-card a::after { display: none; }
+
+body.theme-win2k section { background: #007070 !important; }
+body.theme-win2k #sobre-mi, body.theme-win2k #inicio { background: transparent !important; }
+
+body.theme-win2k #proyectos .glass-card { position: relative; }
+
+body.theme-win2k #proyectos .glass-card::before {
+    content: attr(data-nx);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 22px;
+    z-index: 2;
+    background: #000080;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+}
+
+body.theme-win2k #proyectos .glass-card::after {
+    content: '\00d7';
+    position: absolute;
+    top: 3px; right: 3px;
+    width: 17px; height: 16px;
+    z-index: 3;
+    background: #d4d0c8;
+    color: #000;
+    border: 1px solid;
+    border-color: #ffffff #404040 #404040 #ffffff;
+    box-shadow: inset -1px -1px 0 #808080;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.theme-win2k #proyectos .glass-card:hover { transform: none !important; filter: none !important; }
+
+body.theme-win2k #proyectos .glass-card > div:first-child {
+    background: #d4d0c8 !important;
+    border: 1px solid;
+    border-color: #404040 #ffffff #ffffff #404040;
+    box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #ffffff;
+    margin: 8px;
+    padding-top: 14px;
+}
+
+body.theme-win2k #proyectos .glass-card > div:first-child::before,
+body.theme-win2k #proyectos .glass-card > div:first-child::after { display: none; }
+
+body.theme-win2k #proyectos .glass-card i { color: #000080 !important; opacity: 1 !important; }
+
+body.theme-win2k #proyectos h3 { font-weight: 700; }
+body.theme-win2k #proyectos h2 > span { background: #000080 !important; }
+
+body.theme-win2k a.bg-blue-600,
+body.theme-win2k .paypal-glow {
+    background: #d4d0c8 !important;
+    color: #000000 !important;
+    border: 1px solid !important;
+    border-color: #ffffff #404040 #404040 #ffffff !important;
+    box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #dfdfdf !important;
+    border-radius: 0 !important;
+    transform: none !important;
+    text-shadow: none;
+}
+
+body.theme-win2k a.bg-blue-600:hover,
+body.theme-win2k .paypal-glow:hover {
+    border-color: #404040 #ffffff #ffffff #404040 !important;
+    box-shadow: inset 1px 1px 0 #808080 !important;
+    transform: none !important;
+}
+
+body.theme-win2k .hero-photo {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 1px #808080, 3px 3px 0 rgba(0, 0, 0, 0.5) !important;
+    animation: none !important;
+}
+
+body.theme-win2k .hero-title {
+    background: none !important;
+    -webkit-text-fill-color: #000000 !important;
+    filter: none !important;
+}
+
+body.theme-win2k .hero-sub::after { display: none; }
+
+body.theme-win2k #donar .bg-grid { display: none; }
+body.theme-win2k #donar .glass-card:hover { transform: none !important; }
+body.theme-win2k .text-\[10px\] { font-size: 11px !important; }
+
+/* Ventana modal 2k */
+body.theme-win2k #projectModal { background: rgba(0, 0, 0, 0.45) !important; backdrop-filter: none !important; }
+
+body.theme-win2k #projectModal > .glass-card {
+    position: relative;
+    background: #d4d0c8 !important;
+    box-shadow: inset 1px 1px 0 #ffffff, 4px 4px 10px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.theme-win2k #projectModal > .glass-card::before {
+    content: 'NexusOS \2014 Proyectos';
+    position: absolute;
+    top: 3px; left: 3px; right: 3px;
+    height: 22px;
+    z-index: 5;
+    background: linear-gradient(90deg, #000080, #1084d0);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+}
+
+body.theme-win2k #projectModal > .glass-card > button {
+    top: 5px !important; right: 5px !important;
+    width: 18px !important; height: 18px !important;
+    z-index: 6;
+    background: #d4d0c8 !important;
+    color: #000 !important;
+    border: 1px solid !important;
+    border-color: #ffffff #404040 #404040 #ffffff !important;
+    box-shadow: inset -1px -1px 0 #808080 !important;
+    border-radius: 0 !important;
+    backdrop-filter: none !important;
+    font-size: 12px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none !important;
+}
+
+body.theme-win2k #projectModal > .glass-card > button:hover { transform: none !important; background: #e8e4dc !important; }
+
+body.theme-win2k #modalContent {
+    background: #ffffff;
+    border: 2px solid;
+    border-color: #808080 #ffffff #ffffff #808080;
+    margin: 32px 6px 6px;
+    padding: 14px !important;
+}
+
+body.theme-win2k #modalContent > div:first-child {
+    border: 1px solid #808080;
+    box-shadow: none;
+}
+
+body.theme-win2k #modalContent h2 { color: #000080 !important; text-shadow: none !important; font-size: 1.6rem; }
+body.theme-win2k #modalContent a { background: #ffffff !important; border: 1px solid #808080 !important; border-radius: 0 !important; transition: none !important; }
+body.theme-win2k #modalContent a::before { display: none; }
+body.theme-win2k #modalContent a:hover { background: #000080 !important; transform: none !important; }
+body.theme-win2k #modalContent a:hover span { color: #ffffff !important; }
+body.theme-win2k #modalContent a:hover i { color: #ffffff !important; }
+
+body.theme-win2k #modalContent::-webkit-scrollbar { width: 16px; }
+body.theme-win2k #modalContent::-webkit-scrollbar-track { background: repeating-conic-gradient(#ffffff 0 25%, #d4d0c8 0 50%) 0 0 / 2px 2px; border: 1px solid #808080; }
+body.theme-win2k #modalContent::-webkit-scrollbar-thumb { background: #d4d0c8; border: 1px solid; border-color: #ffffff #404040 #404040 #ffffff; box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080; }
+
+body.theme-win2k footer { background: #d4d0c8 !important; color: #000 !important; border-top: 1px solid #808080 !important; box-shadow: inset 0 1px 0 #ffffff; }
 
 /* --- TEMA MATRIX (Hacker Mode) --- */
-/* effects.css */
-
 body.theme-matrix {
+    --card-bg: rgba(0, 16, 0, 0.88);
+    --card-border: #00ff41;
+    --text-main: #00ff41;
+    --text-muted: #0f9b3f;
+    --accent: #00ff41;
     background-color: black !important;
+    font-size: 1.12rem;
 }
 
-/* Hacemos que el fondo de las secciones sea un poco más transparente 
+/* Hacemos que el fondo de las secciones sea un poco más transparente
    para que la lluvia se vea pasando por detrás */
-body.theme-matrix .gradient-bg, 
+body.theme-matrix .gradient-bg,
 body.theme-matrix section {
     background-color: rgba(0, 0, 0, 0.6) !important;
     background-image: none !important;
@@ -53,13 +256,45 @@ body.theme-matrix .glass-card {
     box-shadow: 0 0 15px rgba(0, 255, 65, 0.3) !important;
 }
 
+body.theme-matrix [class*="rounded"] { border-radius: 0 !important; }
+body.theme-matrix .text-blue-400 { color: #00ff41 !important; }
+body.theme-matrix a.bg-blue-600 { background: #000 !important; border: 1px solid #00ff41 !important; color: #00ff41 !important; box-shadow: 0 0 14px rgba(0, 255, 65, 0.3) !important; }
+body.theme-matrix a.bg-blue-600:hover { background: #022f02 !important; }
+body.theme-matrix nav.glass-card a::after { background: #00ff41; }
+body.theme-matrix #proyectos h2 > span { background: #00ff41 !important; }
+body.theme-matrix #proyectos .glass-card > div:first-child { background: #000 !important; }
+body.theme-matrix #proyectos .glass-card i { color: #00ff41 !important; opacity: 0.85 !important; text-shadow: 0 0 10px #00ff41; }
+body.theme-matrix #proyectos .glass-card:hover { box-shadow: 0 0 26px rgba(0, 255, 65, 0.55) !important; }
+
+body.theme-matrix .hero-title {
+    background: none !important;
+    -webkit-text-fill-color: #00ff41 !important;
+    filter: drop-shadow(0 0 14px rgba(0, 255, 65, 0.55)) !important;
+}
+
+body.theme-matrix .hero-photo {
+    border-color: #00ff41 !important;
+    box-shadow: 0 0 0 1px #00ff41, 0 0 30px rgba(0, 255, 65, 0.35) !important;
+    animation: none !important;
+    filter: grayscale(1) brightness(1.1) sepia(1) hue-rotate(70deg) saturate(4);
+}
+
+body.theme-matrix .paypal-glow { box-shadow: 0 0 20px rgba(0, 255, 65, 0.35) !important; }
+body.theme-matrix #donar .bg-grid { display: none; }
+body.theme-matrix #projectModal > .glass-card { background: rgba(0, 8, 0, 0.95) !important; border: 1px solid #00ff41 !important; box-shadow: 0 0 40px rgba(0, 255, 65, 0.25) !important; }
+body.theme-matrix #modalContent h2 { text-shadow: 0 0 12px rgba(0, 255, 65, 0.8); }
+body.theme-matrix #modalContent a:hover { background: #022f02 !important; }
+body.theme-matrix #modalContent::-webkit-scrollbar-thumb { background: #046b1c; }
+
 /* --- TEMA WINDOWS XP (Luna) --- */
 body.theme-winxp {
-    --bg-main: #245edb !important; /* Azul Luna */
-    --card-bg: #ece9d8; /* Color crema de las ventanas */
-    --card-border: #003ac5;
+    --bg-main: #245edb;
+    --card-bg: #ffffff;
+    --card-border: #0831d9;
     --text-main: #000000;
-    --accent: #3c811f; /* Verde del botón Start */
+    --text-muted: #4a4a4a;
+    --accent: #0a55cf;
+    --nav-bg: #245edb;
 }
 
 body.theme-winxp .gradient-bg {
@@ -67,25 +302,176 @@ body.theme-winxp .gradient-bg {
     background: linear-gradient(to bottom, #74b3e8 0%, #4a91d1 50%, #63a62f 51%, #88c440 100%) !important;
 }
 
+body.theme-winxp [class*="rounded"] { border-radius: 5px !important; }
+body.theme-winxp [class*="italic"] { font-style: normal !important; }
+body.theme-winxp .animate-pulse { animation: none !important; }
+
 body.theme-winxp .glass-card {
-    background: #ece9d8 !important;
-    border: 2px solid #003ac5 !important;
+    background: #ffffff !important;
+    border: 1px solid #0831d9 !important;
     border-radius: 8px 8px 0 0 !important;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.2) !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 60, 0.45) !important;
     backdrop-filter: none !important;
     color: #000 !important;
 }
 
-/* El botón azul de la nav bar de XP */
-body.theme-winxp nav {
+/* La barra azul de la nav */
+body.theme-winxp nav.glass-card {
     background: linear-gradient(to bottom, #245edb 0%, #3f8cf3 9%, #245edb 18%, #245edb 92%, #1941a5 100%) !important;
-    border-bottom: 2px solid #1941a5 !important;
+    border-bottom: 1px solid #0831d9 !important;
+    border-radius: 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 60, 0.5) !important;
 }
 
-/* Transformar botones en el estilo redondeado de XP */
-body.theme-winxp .bg-blue-600 {
-    background: linear-gradient(to bottom, #ffaa44 0%, #ff8800 100%) !important; /* Estilo botón Cerrar/Naranja */
-    border: 1px solid #cc6600 !important;
-    border-radius: 6px !important;
-    color: white !important;
+body.theme-winxp nav a, body.theme-winxp nav span { color: #ffffff !important; }
+body.theme-winxp nav a:hover { color: #ffe08a !important; }
+body.theme-winxp nav.glass-card a::after { background: #ffe08a; }
+
+body.theme-winxp section { background: rgba(0, 0, 70, 0.18) !important; }
+body.theme-winxp #sobre-mi, body.theme-winxp #inicio { background: transparent !important; }
+
+body.theme-winxp #proyectos .glass-card { position: relative; }
+
+body.theme-winxp #proyectos .glass-card::before {
+    content: attr(data-nx);
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 27px;
+    z-index: 2;
+    background: linear-gradient(to bottom, #3a8af5 0%, #1261d8 8%, #0a55cf 45%, #0c5cd6 88%, #2575e8 100%);
+    border-radius: 7px 7px 0 0;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    text-shadow: 1px 1px 1px rgba(0, 0, 40, 0.7);
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
 }
+
+body.theme-winxp #proyectos .glass-card::after {
+    content: '\2715';
+    position: absolute;
+    top: 4px; right: 5px;
+    width: 21px; height: 19px;
+    z-index: 3;
+    background: linear-gradient(to bottom, #f9a08b, #e25b38 45%, #cf3f1c);
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 40, 0.5);
+    color: #ffffff;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body.theme-winxp #proyectos .glass-card:hover { transform: none !important; filter: none !important; box-shadow: 0 5px 18px rgba(0, 0, 60, 0.55) !important; }
+
+body.theme-winxp #proyectos .glass-card > div:first-child {
+    background: #ffffff !important;
+    border-bottom: 1px solid #9eb3d9;
+    padding-top: 27px;
+}
+
+body.theme-winxp #proyectos .glass-card > div:first-child::before { opacity: 0 !important; }
+body.theme-winxp #proyectos .glass-card > div:first-child::after { display: none; }
+body.theme-winxp #proyectos .glass-card i { opacity: 1 !important; }
+body.theme-winxp #proyectos h2 > span { background: linear-gradient(90deg, #ffffff, transparent) !important; }
+
+body.theme-winxp a.bg-blue-600 {
+    background: linear-gradient(to bottom, #56a4f5 0%, #2a7de0 45%, #1663c4 100%) !important;
+    border: 1px solid #0a47a0 !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45), 0 2px 5px rgba(0, 0, 60, 0.4) !important;
+    border-radius: 5px !important;
+    color: #ffffff !important;
+}
+
+body.theme-winxp a.bg-blue-600:hover { filter: brightness(1.12); }
+
+body.theme-winxp .paypal-glow {
+    background: linear-gradient(to bottom, #4aa8e8 0%, #0a6cb8 50%, #085a9c 100%) !important;
+    border: 1px solid #053a66 !important;
+    border-radius: 6px !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4), 0 0 18px rgba(10, 85, 207, 0.55) !important;
+}
+
+body.theme-winxp .paypal-glow:hover { transform: none !important; filter: brightness(1.1); }
+
+body.theme-winxp .hero-photo {
+    border-color: #ffffff !important;
+    box-shadow: 0 0 0 1px #0831d9, 0 6px 16px rgba(0, 0, 60, 0.5) !important;
+    animation: none !important;
+}
+
+body.theme-winxp .hero-title {
+    background: none !important;
+    -webkit-text-fill-color: #ffffff !important;
+    filter: drop-shadow(1px 2px 2px rgba(0, 0, 60, 0.7)) !important;
+}
+
+body.theme-winxp .hero-sub { color: #eaf3ff !important; text-shadow: 1px 1px 2px rgba(0, 0, 60, 0.8); }
+body.theme-winxp .hero-sub::after { color: #ffe08a; }
+
+body.theme-winxp #donar .bg-grid { opacity: 0.08 !important; }
+body.theme-winxp #donar .glass-card { border-radius: 8px 8px 0 0 !important; }
+body.theme-winxp #donar .glass-card:hover { transform: none !important; }
+body.theme-winxp #donar .bg-blue-500\/10 { background: #eaf3ff !important; }
+
+/* Ventana modal XP */
+body.theme-winxp #projectModal { background: rgba(0, 0, 60, 0.4) !important; }
+
+body.theme-winxp #projectModal > .glass-card {
+    position: relative;
+    background: #ffffff !important;
+    border-radius: 8px 8px 0 0 !important;
+    box-shadow: 0 14px 45px rgba(0, 0, 40, 0.7) !important;
+}
+
+body.theme-winxp #projectModal > .glass-card::before {
+    content: 'Proyectos \2014 Nyper Yuhgard';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 29px;
+    z-index: 5;
+    background: linear-gradient(to bottom, #3a8af5 0%, #1261d8 8%, #0a55cf 45%, #0c5cd6 88%, #2575e8 100%);
+    border-radius: 7px 7px 0 0;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    text-shadow: 1px 1px 1px rgba(0, 0, 40, 0.7);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+body.theme-winxp #projectModal > .glass-card > button {
+    top: 4px !important; right: 5px !important;
+    width: 22px !important; height: 20px !important;
+    z-index: 6;
+    background: linear-gradient(to bottom, #f9a08b, #e25b38 45%, #cf3f1c) !important;
+    border: 1px solid #ffffff !important;
+    border-radius: 4px !important;
+    backdrop-filter: none !important;
+    color: #ffffff !important;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: none !important;
+}
+
+body.theme-winxp #projectModal > .glass-card > button:hover { transform: none !important; filter: brightness(1.15); }
+
+body.theme-winxp #modalContent { padding-top: 40px !important; }
+body.theme-winxp #modalContent h2 { color: #0a55cf !important; text-shadow: none !important; }
+body.theme-winxp #modalContent a { background: #f2f7ff !important; border: 1px solid #b9cdec !important; }
+body.theme-winxp #modalContent a:hover { background: #dcebff !important; border-color: #0a55cf !important; transform: none !important; }
+body.theme-winxp #modalContent a::before { display: none; }
+
+body.theme-winxp #modalContent::-webkit-scrollbar { width: 17px; }
+body.theme-winxp #modalContent::-webkit-scrollbar-track { background: #eef3fb; border-left: 1px solid #b9cdec; }
+body.theme-winxp #modalContent::-webkit-scrollbar-thumb { background: linear-gradient(to right, #6ea6e8, #2a74d4); border: 1px solid #0a47a0; border-radius: 3px; }
+
+body.theme-winxp footer { background: rgba(255, 255, 255, 0.85) !important; color: #0a47a0 !important; border-top: 1px solid #0831d9 !important; }
