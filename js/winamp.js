@@ -170,6 +170,57 @@ const winampStyles = `
         0% { transform: translate(0, 0); }
         100% { transform: translate(-100%, 0); }
     }
+
+    /* --- SKIN NEXUSPLAYER 2.93: rescatada de 54ed1e2, la que estaba antes del rediseño --- */
+    #winamp-player.skin-nexusplayer {
+        background: #2a2a2a;
+        border: 2px solid #4a4a4a;
+        box-shadow: 4px 4px 0 #000;
+        padding: 0.5rem;
+    }
+
+    /* Finge una ventana Win9x: el chrome no puede seguir al tema o el navy se come el texto */
+    #winamp-player.skin-nexusplayer,
+    #winamp-player.skin-nexusplayer button {
+        font-family: Tahoma, 'MS Sans Serif', Verdana, sans-serif;
+    }
+    #winamp-player.skin-nexusplayer .wp-title {
+        color: #ffffff;
+        font-size: 11px;
+    }
+
+    .winamp-btn {
+        background: #c0c0c0;
+        border-top: 2px solid #ffffff;
+        border-left: 2px solid #ffffff;
+        border-right: 2px solid #404040;
+        border-bottom: 2px solid #404040;
+        color: black;
+        font-size: 8px;
+        font-weight: bold;
+        padding: 4px 6px;
+        flex: 1;
+        text-align: center;
+        cursor: pointer;
+    }
+    .winamp-btn:active, .winamp-btn.active {
+        border-top: 2px solid #404040;
+        border-left: 2px solid #404040;
+        border-right: 2px solid #ffffff;
+        border-bottom: 2px solid #ffffff;
+        background: #b0b0b0;
+    }
+
+    /* El display clásico usa la verde y Courier de siempre, no la VT323 del skin actual */
+    #winamp-player.skin-nexusplayer .winamp-display-text {
+        color: #00ff00;
+        font-family: 'Courier New', monospace;
+    }
+    #winamp-player.skin-nexusplayer #w-progress {
+        position: static;
+        height: 100%;
+        background: #2563eb;
+    }
 `;
 
 // --- CONFIGURACIÓN DE TU MÚSICA ---
@@ -184,6 +235,7 @@ const playlist = [
 let currentTrack = 0;
 let shuffleOn = false;
 let repeatOn = false;
+let playerSkin = localStorage.getItem('nexus-player-skin') || 'winamp';
 const audio = new Audio();
 // IMPORTANTE: Solo activar anonymous si el servidor lo soporta.
 // Si da problemas de silencio, el juego de ritmo usará un modo de compatibilidad.
@@ -193,15 +245,12 @@ audio.src = playlist[currentTrack].url;
 audio.volume = 0.7;
 window.nexusMainAudio = audio;
 
-function initWinamp() {
-    const styleSheet = document.createElement("style");
-    styleSheet.innerText = winampStyles;
-    document.head.appendChild(styleSheet);
+function trackLabel() {
+    return playerSkin === 'nexusplayer' ? '♪ ' + playlist[currentTrack].name : playlist[currentTrack].name;
+}
 
-    const player = document.createElement('div');
-    player.id = 'winamp-player';
-    player.className = 'fixed bottom-24 right-6 w-72 z-[60] select-none';
-    player.innerHTML = `
+const playerLayouts = {
+    winamp: () => `
         <div id="winamp-handle" class="wa-title cursor-move">
             <span class="wa-groove"></span>
             <span class="wa-title-text">NEXUSAMP</span>
@@ -218,12 +267,12 @@ function initWinamp() {
                 </div>
                 <div class="wa-lcd flex-1 px-2 py-1 overflow-hidden">
                     <div class="w-marquee-container">
-                        <div id="w-title" class="winamp-display-text w-marquee-content text-[13px] leading-tight">${playlist[currentTrack].name}</div>
+                        <div id="w-title" class="winamp-display-text w-marquee-content text-[13px] leading-tight">${trackLabel()}</div>
                     </div>
                     <div class="flex items-baseline justify-between">
                         <span id="w-time" class="winamp-display-text text-[18px] leading-none">0:00</span>
                         <span class="winamp-display-text text-[11px]">192kbps 44khz</span>
-                        <span id="w-tracknum" class="winamp-display-text text-[14px]">1.</span>
+                        <span id="w-tracknum" class="winamp-display-text text-[14px]">${currentTrack + 1}.</span>
                     </div>
                 </div>
             </div>
@@ -244,8 +293,43 @@ function initWinamp() {
                 <span class="wa-logo self-center px-1">⚡</span>
             </div>
         </div>
-    `;
+    `,
+
+    nexusplayer: () => `
+        <div id="winamp-handle" class="bg-gradient-to-r from-[#000080] to-[#080808] text-[10px] px-2 py-1 flex justify-between items-center cursor-move border-b border-[#1a1a1a]">
+            <span class="wp-title tracking-widest font-bold uppercase italic">NexusPlayer 2.93</span>
+            <button onclick="minimizeWinamp()" class="w-3 h-3 bg-[#c0c0c0] text-black flex items-center justify-center text-[8px] border border-black font-bold hover:bg-red-500 hover:text-white transition-colors">X</button>
+        </div>
+        <div class="bg-black p-2 mt-1 border border-[#3a3a3a] flex gap-3 h-16">
+            <div id="w-time" class="winamp-display-text text-xl font-bold flex items-center italic">00:00</div>
+            <div class="flex-1 flex flex-col justify-center overflow-hidden text-[9px]">
+                <div class="w-marquee-container">
+                    <div id="w-title" class="winamp-display-text w-marquee-content">${trackLabel()}</div>
+                </div>
+                <div id="w-seek" class="w-full bg-[#1a1a1a] h-1 mt-1 border border-[#3a3a3a] cursor-pointer">
+                    <div id="w-progress" class="h-full bg-blue-600" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="flex justify-between mt-2 gap-1">
+            <button onclick="prevTrack()" class="winamp-btn">PREV</button>
+            <button onclick="togglePlay()" id="btn-play" class="winamp-btn font-black">PLAY</button>
+            <button onclick="audio.pause()" class="winamp-btn">PAUSE</button>
+            <button onclick="stopTrack()" class="winamp-btn">STOP</button>
+            <button onclick="nextTrack()" class="winamp-btn">NEXT</button>
+        </div>
+    `
+};
+
+function initWinamp() {
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = winampStyles;
+    document.head.appendChild(styleSheet);
+
+    const player = document.createElement('div');
+    player.id = 'winamp-player';
     document.body.appendChild(player);
+    renderPlayer();
 
     audio.ontimeupdate = () => {
         const mins = Math.floor(audio.currentTime / 60);
@@ -266,25 +350,52 @@ function initWinamp() {
         }
         nextTrack();
     };
+}
 
-    document.getElementById('w-seek').onclick = (e) => {
+function renderPlayer() {
+    if (!playerLayouts[playerSkin]) playerSkin = 'winamp';
+    const player = document.getElementById('winamp-player');
+    player.className = 'fixed bottom-24 right-6 w-72 z-[60] select-none skin-' + playerSkin;
+    player.innerHTML = playerLayouts[playerSkin]();
+
+    const seek = document.getElementById('w-seek');
+    if (seek) seek.onclick = (e) => {
         if (!audio.duration) return;
         const rect = e.currentTarget.getBoundingClientRect();
         audio.currentTime = ((e.clientX - rect.left) / rect.width) * audio.duration;
     };
 
-    document.getElementById('w-volume').onclick = (e) => {
+    const volume = document.getElementById('w-volume');
+    if (volume) volume.onclick = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         audio.volume = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
         document.getElementById('w-volfill').style.width = (audio.volume * 100) + '%';
     };
 
     setupViz();
+    // El handle es nuevo en cada render; los listeners de document no se duplican
     setupDraggable(player);
 }
 
+function setPlayerSkin(name) {
+    const skins = Object.keys(playerLayouts);
+    if (!name || name === 'list') {
+        return 'Skins: ' + skins.join(', ') + '  [current: ' + playerSkin + ']';
+    }
+    if (!playerLayouts[name]) return "Error: Skin '" + name + "' not found.";
+    playerSkin = name;
+    localStorage.setItem('nexus-player-skin', name);
+    renderPlayer();
+    return 'Loading skin "' + name + '"...';
+}
+
+window.setPlayerSkin = setPlayerSkin;
+
+let vizRAF = 0;
 function setupViz() {
     const canvas = document.getElementById('w-viz');
+    cancelAnimationFrame(vizRAF);
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const bars = Array(12).fill(1);
 
@@ -299,7 +410,7 @@ function setupViz() {
         });
         ctx.fillStyle = '#2060c0';
         for (let x = 8; x < canvas.width; x += 4) ctx.fillRect(x, canvas.height - 4, 2, 2);
-        requestAnimationFrame(draw);
+        vizRAF = requestAnimationFrame(draw);
     };
     draw();
 }
@@ -356,7 +467,7 @@ function loadTrack() {
         titleEl.classList.remove('w-marquee-content');
         void titleEl.offsetWidth;
         titleEl.classList.add('w-marquee-content');
-        titleEl.innerText = playlist[currentTrack].name;
+        titleEl.innerText = trackLabel();
     }
     const numEl = document.getElementById('w-tracknum');
     if(numEl) numEl.innerText = (currentTrack + 1) + '.';
@@ -370,20 +481,23 @@ function minimizeWinamp() {
     if (taskButton) taskButton.style.display = 'flex';
 }
 
+const drag = { on: false, offset: [0, 0], bound: false };
 function setupDraggable(el) {
-    let isDragging = false; let offset = [0, 0];
     const handle = document.getElementById('winamp-handle');
     handle.onmousedown = (e) => {
-        isDragging = true;
-        offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY];
+        drag.on = true;
+        drag.offset = [el.offsetLeft - e.clientX, el.offsetTop - e.clientY];
     };
+    // Cambiar de skin reescribe el handle; los listeners de document solo van una vez
+    if (drag.bound) return;
+    drag.bound = true;
     document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        el.style.left = (e.clientX + offset[0]) + 'px';
-        el.style.top = (e.clientY + offset[1]) + 'px';
+        if (!drag.on) return;
+        el.style.left = (e.clientX + drag.offset[0]) + 'px';
+        el.style.top = (e.clientY + drag.offset[1]) + 'px';
         el.style.bottom = 'auto'; el.style.right = 'auto';
     });
-    document.addEventListener('mouseup', () => isDragging = false);
+    document.addEventListener('mouseup', () => drag.on = false);
 }
 
 document.addEventListener('DOMContentLoaded', initWinamp);

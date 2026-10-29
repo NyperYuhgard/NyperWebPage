@@ -314,7 +314,7 @@ function processCommand(cmd, output) {
     res.style.color = "#aaa";
     
     if (cmd === 'help') {
-        res.innerHTML = "Available commands: HELP, CLS, DATE, VER, EXIT, THEME [name], NEON, SYSTEM, LOAD";
+        res.innerHTML = "Available commands: HELP, CLS, DATE, VER, EXIT, THEME [name], NEXUSSKIN [name], NEON, SYSTEM, LOAD";
     } else if (cmd === 'cls') {
         output.innerHTML = '';
         return;
@@ -330,6 +330,11 @@ function processCommand(cmd, output) {
         } else {
             res.innerHTML = "Error: Theme not found.";
         }
+    } else if (cmd === 'nexusskin' || cmd.startsWith('nexusskin ')) {
+        // textContent: el argumento viene del teclado del visitante
+        res.textContent = typeof setPlayerSkin === 'function'
+            ? setPlayerSkin(cmd.split(' ')[1])
+            : "Error: NexusPlayer is not loaded.";
     } else if (cmd === 'neon') {
         document.body.classList.toggle('neon-active');
         const isActive = document.body.classList.contains('neon-active');
